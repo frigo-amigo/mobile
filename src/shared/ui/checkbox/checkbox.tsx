@@ -2,7 +2,6 @@ import React from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { colors } from '../../styles/global';
 import Icon from '../icon';
-import CheckIcon from '@/shared/assets/images/common/checkmark.svg';
 
 type CheckboxProps = {
   checked: boolean;
@@ -13,7 +12,7 @@ type CheckboxProps = {
 const Checkbox: React.FC<CheckboxProps> = ({ checked, onPress, style }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[styles.checkbox, style, checked && styles.checked]}>
-      {checked && <Icon src={CheckIcon} width={16} height={16} />}
+      {checked && <Icon name="checkmark" width={16} height={16} />}
     </TouchableOpacity>
   );
 };

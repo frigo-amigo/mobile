@@ -2,7 +2,6 @@ import React from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, TextInputProps } from 'react-native';
 import { colors } from '../../styles/global';
 import Icon from '../icon';
-import CloseIcon from '@/shared/assets/images/common/close.svg';
 import { CustomText } from '../text';
 
 type InputProps = {
@@ -46,7 +45,7 @@ const Input: React.FC<InputProps> = ({
       />
       {showClearButton && value && (
         <TouchableOpacity onPress={onClear} style={styles.clearButton}>
-          <Icon src={CloseIcon} width={28} height={28} />
+          <Icon name="close" width={28} height={28} />
         </TouchableOpacity>
       )}
     </View>

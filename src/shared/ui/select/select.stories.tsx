@@ -17,6 +17,5 @@ export const SelectDefault: Story = {
 export const SelectWithIcon: Story = {
   args: {
     options: ['кг', 'л', 'шт'],
-    icon: require('../../assets/images/common/dropdown-arrow.svg'),
   },
 };

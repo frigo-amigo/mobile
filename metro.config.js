@@ -18,9 +18,9 @@ defaultConfig.resolver = {
 };
 
 // Поддержка алиасов для путей
-// defaultConfig.resolver.extraNodeModules = {
-//   '@': path.resolve(__dirname, 'src'),
-// };
+defaultConfig.resolver.extraNodeModules = {
+  '@': path.resolve(__dirname, 'src'),
+};
 
 module.exports = withStorybook(defaultConfig, {
   enabled: true,

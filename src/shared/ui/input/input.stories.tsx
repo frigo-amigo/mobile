@@ -19,6 +19,5 @@ export const InputWithIcon: Story = {
   args: {
     placeholder: 'Введите текст',
     value: '',
-    icon: true,
   },
 };

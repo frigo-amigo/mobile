@@ -34,7 +34,7 @@ const Select: React.FC<SelectProps> = ({ options, onSelect, defaultOption, style
       )}
       <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={styles.select}>
         <Text style={styles.text}>{selected}</Text>
-        <Icon src={DropdownArrow} width={24} height={23} />
+        <Icon name="dropdown-arrow" width={24} height={23} />
       </TouchableOpacity>
       {isOpen && (
         <View style={styles.dropdown}>
