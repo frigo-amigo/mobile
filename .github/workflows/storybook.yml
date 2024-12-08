@@ -1,0 +1,36 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Login YC
+      id: cr-login
+      uses: yc-actions/yc-cr-login@v1
+      with:
+        yc-sa-json-credentials: ${{ secrets.AUTHORIZED_KEY }}
+
+    - name: Build and push API Gateway Docker image
+      env:
+        CR_REPOSITORY: mobile
+      run: |
+        docker build -t ${{secrets.CI_REGISTRY}}/$CR_REPOSITORY:storybook-${{github.sha}} .
+        docker push ${{secrets.CI_REGISTRY}}/$CR_REPOSITORY:storybook-${{github.sha}}
+    - name: Configure kubectl
+      uses: azure/k8s-set-context@v1
+      with: 
+        kubeconfig: ${{ secrets.KUBE_CONFIG }}
+        context: default
+    - name: Deploy
+      run: |
+        kubectl set image deployment/storybook storybook=${{secrets.CI_REGISTRY}}/mobile:storybook-${{github.sha}}
+        kubectl rollout status deployment/storybook
