@@ -11,10 +11,12 @@ type Story = StoryObj<typeof IconButton>;
 
 export const PlusButton: Story = {
   args: {
-    src: require('../../assets/images/common/plus.svg'),
+    src: 'plus',
   },
 };
 
 export const MinusButton: Story = {
-  args: { src: require('../../assets/images/common/minus.svg') },
+  args: {
+    src: 'minus',
+  },
 };

@@ -13,7 +13,7 @@ const AddButton: React.FC<AddButtonProps> = ({ children, onPress, style }) => {
   return (
     <TouchableOpacity onPress={onPress} style={style} activeOpacity={0.7}>
       <View style={styles.content}>
-        <Icon src={require('../../assets/images/common/add-plus.svg')} width={28} height={28} />
+        <Icon name={'add-plus'} width={28} height={28} />
         <Text style={styles.text}>{children}</Text>
       </View>
     </TouchableOpacity>

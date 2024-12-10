@@ -11,20 +11,20 @@ type Story = StoryObj<typeof Icon>;
 
 export const Icon20: Story = {
   args: {
-    src: require('../../assets/images/common/edit.svg'),
+    name: 'edit',
     width: 20,
     height: 20,
   },
 };
 
 export const Icon28: Story = {
-  args: { src: require('../../assets/images/common/search.svg'), width: 28, height: 28 },
+  args: { name: 'search', width: 28, height: 28 },
 };
 
 export const Icon40: Story = {
-  args: { src: require('../../assets/images/common/list.svg'), width: 40, height: 40 },
+  args: { name: 'shopping-list', width: 40, height: 40 },
 };
 
 export const Icon64: Story = {
-  args: { src: require('../../assets/images/common/place-product.svg'), width: 64, height: 64 },
+  args: { name: 'add-product', width: 64, height: 64 },
 };

@@ -18,6 +18,5 @@ export const Unchecked: Story = {
 export const Checked: Story = {
   args: {
     checked: true,
-    checkIcon: require('../../assets/images/common/checkmark.svg'),
   },
 };

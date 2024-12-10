@@ -6,4 +6,5 @@ export default ({ config }) => ({
     storybookEnabled: process.env.STORYBOOK_ENABLED,
   },
   plugins: ['expo-font'],
+  newArchEnabled: true,
 });

@@ -46,7 +46,7 @@ const Input: React.FC<InputProps> = ({
       />
       {showClearButton && value && (
         <TouchableOpacity onPress={onClear} style={styles.clearButton}>
-          <Icon src={CloseIcon} width={28} height={28} />
+          <Icon name="close" width={28} height={28} />
         </TouchableOpacity>
       )}
     </View>

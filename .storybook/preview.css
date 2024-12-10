@@ -1,0 +1,4 @@
+@font-face {
+  font-family: 'Jost-Regular';
+  src: url(@/shared/assets/fonts/Jost-Regular.ttf), url(@/shared/assets/fonts/Jost-Medium.ttf);
+}

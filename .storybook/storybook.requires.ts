@@ -8,15 +8,28 @@ import "@storybook/addon-ondevice-actions/register";
 const normalizedStories = [
   {
     titlePrefix: "",
-    directory: "./components",
-    files: "**/*.stories.?(ts|tsx|js|jsx)",
+    directory: "./src",
+    files: "**/*.mdx",
     importPathMatcher:
-      /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/,
+      /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.mdx)$/,
     // @ts-ignore
     req: require.context(
-      "../components",
+      "../src",
       true,
-      /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
+      /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.mdx)$/
+    ),
+  },
+  {
+    titlePrefix: "",
+    directory: "./src",
+    files: "**/*.stories.@(ts|tsx|js|jsx)",
+    importPathMatcher:
+      /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.stories\.(ts|tsx|js|jsx))$/,
+    // @ts-ignore
+    req: require.context(
+      "../src",
+      true,
+      /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.stories\.(ts|tsx|js|jsx))$/
     ),
   },
 ];
@@ -28,8 +41,8 @@ declare global {
 
 const annotations = [
   require("./preview"),
-  require("@storybook/react-native/dist/preview"),
-  require("@storybook/addon-actions/preview"),
+  require("@storybook/react-native/preview"),
+  require("@storybook/addon-ondevice-actions/preview"),
 ];
 
 global.STORIES = normalizedStories;
