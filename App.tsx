@@ -37,19 +37,14 @@ function App() {
         </NavigationContainer>
       </Provider>
     </GestureHandlerRootView>
-    // <View style={styles.container}>
-    //   <Text>Open up App.js to start working on your app!</Text>
-    // </View>
   );
 }
 
 let AppEntryPoint = App;
 
-// if (Constants.expoConfig.extra.storybookEnabled === 'true') {
-//   AppEntryPoint = require('./.storybook').default;
-// }
-
-// console.log('Is Storybook enabled?', Constants.expoConfig.extra.storybookEnabled);
+if (Constants.expoConfig.extra.storybookEnabled === 'true') {
+  AppEntryPoint = require('./.storybook').default;
+}
 
 const styles = StyleSheet.create({
   container: {
