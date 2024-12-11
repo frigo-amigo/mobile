@@ -98,6 +98,7 @@ export const iconsMap: Record<string, React.FC<SvgProps>> = {
   tomato: Tomato,
   vegetables: Vegetables,
 
+  яблоко: Apple,
   'Хлеб и хлебобулочные изделия': Bread,
   'Сладости и дессерты': Candies,
   'Консервированные продукты': CannedFood,

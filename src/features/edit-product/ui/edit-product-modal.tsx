@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  ScrollView,
   Platform,
   Dimensions,
   TouchableWithoutFeedback,
@@ -14,14 +13,11 @@ import { useDispatch } from 'react-redux';
 import { editProduct } from '@/entities/product/model/product-slice';
 import { colors } from '@/shared/styles/global';
 import { Product } from '@/shared/types/product';
-import pluralize from 'pluralize';
-import productIcons from '@/shared/data/product-icons';
-import categoryIcons from '@/shared/data/categories-icons';
 import { categories } from '@/shared/data/categories';
-import PlusIcon from '@/shared/assets/images/common/plus.svg';
-import MinusIcon from '@/shared/assets/images/common/minus.svg';
 import { units } from '@/shared/types/product';
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { calculateStorageDuration, formatDateInput } from '@/shared/utils/date-utils';
+import { getIcon } from '@/shared/utils/product-utils';
 
 type EditProductModalProps = {
   product: Product;
@@ -40,6 +36,8 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
   const [expirationDate, setExpirationDate] = useState(product.expirationDate);
   const [minQuantity, setMinQuantity] = useState(product.minQuantity);
   const dispatch = useDispatch();
+  const storageDuration = calculateStorageDuration(manufactureDate, expirationDate);
+  const iconName = getIcon(name, category);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   React.useEffect(() => {
@@ -49,46 +47,6 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
       bottomSheetModalRef.current?.close();
     }
   }, [isVisible]);
-
-  const calculateStorageDuration = () => {
-    try {
-      if (manufactureDate && expirationDate) {
-        const manufacture = new Date(manufactureDate.split('.').reverse().join('-'));
-        const expiration = new Date(expirationDate.split('.').reverse().join('-'));
-
-        if (isNaN(manufacture.getTime()) || isNaN(expiration.getTime())) {
-          return '—';
-        }
-
-        const diffTime = expiration.getTime() - manufacture.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return `${Math.max(diffDays, 0)} дн.`;
-      }
-    } catch (error) {
-      console.error('Ошибка в calculateStorageDuration:', error);
-      return '—';
-    }
-
-    return '—';
-  };
-
-  const formatDateInput = (text: string) => {
-    const sanitized = text.replace(/[^0-9]/g, '');
-    const formatted =
-      sanitized.length <= 2
-        ? sanitized
-        : sanitized.length <= 4
-        ? `${sanitized.slice(0, 2)}.${sanitized.slice(2)}`
-        : `${sanitized.slice(0, 2)}.${sanitized.slice(2, 4)}.${sanitized.slice(4, 8)}`;
-    return formatted;
-  };
-
-  const getIcon = (): string => {
-    const singularName = pluralize.singular(name.trim().toLowerCase());
-    if (productIcons[singularName]) return singularName;
-    if (categoryIcons[category]) return category;
-    return 'undefined';
-  };
 
   const handleSave = () => {
     dispatch(
@@ -128,8 +86,8 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <View style={styles.container}>
               <View style={styles.icon}>
-                {getIcon() ? (
-                  <Icon name={getIcon()} width={80} height={80} />
+                {iconName ? (
+                  <Icon name={iconName} width={80} height={80} />
                 ) : (
                   <View style={styles.emptyIcon}></View>
                 )}
@@ -192,7 +150,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
                 </View>
               </View>
 
-              <Input value={calculateStorageDuration()} editable={false} label="Хранить не более" />
+              <Input value={storageDuration} editable={false} label="Хранить не более" />
               <PrimaryButton children="Сохранить" width="max" onPress={handleSave} />
             </View>
           </KeyboardAvoidingView>

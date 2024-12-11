@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
-  ScrollView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
@@ -12,13 +11,12 @@ import {
 import { CustomText, Icon, IconButton, PrimaryButton, Select } from '@/shared/ui';
 import { Input } from '@/shared/ui';
 import { categories } from '@/shared/data/categories';
-import productIcons from '@/shared/data/product-icons';
-import categoryIcons from '@/shared/data/categories-icons';
 import { colors } from '@/shared/styles/global';
-import pluralize from 'pluralize';
 import { useDispatch } from 'react-redux';
 import { addProduct } from '@/entities/product/model/product-slice';
 import { units } from '@/shared/types/product';
+import { calculateStorageDuration, formatDateInput } from '@/shared/utils/date-utils';
+import { getIcon } from '@/shared/utils/product-utils';
 
 const width = Dimensions.get('window').width;
 
@@ -33,46 +31,8 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
   const [manufactureDate, setManufactureDate] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
   const dispatch = useDispatch();
-
-  const calculateStorageDuration = () => {
-    try {
-      if (manufactureDate && expirationDate) {
-        const manufacture = new Date(manufactureDate.split('.').reverse().join('-'));
-        const expiration = new Date(expirationDate.split('.').reverse().join('-'));
-
-        if (isNaN(manufacture.getTime()) || isNaN(expiration.getTime())) {
-          return '—';
-        }
-
-        const diffTime = expiration.getTime() - manufacture.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return `${Math.max(diffDays, 0)} дн.`;
-      }
-    } catch (error) {
-      console.error('Ошибка в calculateStorageDuration:', error);
-      return '—';
-    }
-
-    return '—';
-  };
-
-  const formatDateInput = (text: string) => {
-    const sanitized = text.replace(/[^0-9]/g, '');
-    const formatted =
-      sanitized.length <= 2
-        ? sanitized
-        : sanitized.length <= 4
-        ? `${sanitized.slice(0, 2)}.${sanitized.slice(2)}`
-        : `${sanitized.slice(0, 2)}.${sanitized.slice(2, 4)}.${sanitized.slice(4, 8)}`;
-    return formatted;
-  };
-
-  const getIcon = (): string => {
-    const singularName = pluralize.singular(name.trim().toLowerCase());
-    if (productIcons[singularName]) return singularName;
-    if (categoryIcons[category]) return category;
-    return 'undefined';
-  };
+  const storageDuration = calculateStorageDuration(manufactureDate, expirationDate);
+  const iconName = getIcon(name, category);
 
   const generateId = () => `${Date.now()}`;
 
@@ -107,11 +67,10 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
       style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        {/* <ScrollView contentContainerStyle={styles.scrollContainer} scrollEnabled={false}> */}
         <View style={styles.container}>
           <View style={styles.icon}>
-            {getIcon() ? (
-              <Icon name={getIcon()} width={80} height={80} />
+            {iconName ? (
+              <Icon name={iconName} width={80} height={80} />
             ) : (
               <View style={styles.emptyIcon}></View>
             )}
@@ -174,20 +133,15 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
             </View>
           </View>
 
-          <Input value={calculateStorageDuration()} editable={false} label="Хранить не более" />
+          <Input value={storageDuration} editable={false} label="Хранить не более" />
           <PrimaryButton children="Добавить" width="max" onPress={handleAddProduct} />
         </View>
-        {/* </ScrollView> */}
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    padding: 20,
-  },
   container: {
     gap: 22,
     padding: 20,
