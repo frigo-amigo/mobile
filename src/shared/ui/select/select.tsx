@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.gray10,
     maxHeight: 43,
     borderRadius: 5,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: colors.gray90,
     borderWidth: 1,
+    maxHeight: 350,
     zIndex: 1,
   },
   option: {
