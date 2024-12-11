@@ -81,7 +81,11 @@ export const ProductList = () => {
         />
       )}
       {isEditModalVisible && selectedProduct && (
-        <EditProductModal product={selectedProduct} onClose={handleCloseModal} />
+        <EditProductModal
+          product={selectedProduct}
+          onClose={handleCloseModal}
+          isVisible={isEditModalVisible}
+        />
       )}
     </>
   );

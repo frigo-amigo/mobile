@@ -6,6 +6,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { CustomText, Icon, IconButton, PrimaryButton, Select } from '@/shared/ui';
 import { Input } from '@/shared/ui';
@@ -104,7 +106,8 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}
     >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {/* <ScrollView contentContainerStyle={styles.scrollContainer} scrollEnabled={false}> */}
         <View style={styles.container}>
           <View style={styles.icon}>
             {getIcon() ? (
@@ -174,7 +177,8 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
           <Input value={calculateStorageDuration()} editable={false} label="Хранить не более" />
           <PrimaryButton children="Добавить" width="max" onPress={handleAddProduct} />
         </View>
-      </ScrollView>
+        {/* </ScrollView> */}
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 };
@@ -186,6 +190,7 @@ const styles = StyleSheet.create({
   },
   container: {
     gap: 22,
+    padding: 20,
   },
   icon: {
     alignItems: 'center',

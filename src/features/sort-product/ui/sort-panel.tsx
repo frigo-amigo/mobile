@@ -37,7 +37,7 @@ export const SortPanel: React.FC<SortPanelProps> = ({ isVisible, onClose }) => {
         </View>
       )}
       ref={bottomSheetModalRef}
-      snapPoints={['40%']}
+      snapPoints={[230]}
       onDismiss={onClose}
     >
       <BottomSheetView style={styles.container}>
