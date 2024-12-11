@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { colors } from '../../styles/global';
+import { CustomText } from '../text';
 
 type PrimaryButtonProps = {
   children: string;
@@ -32,7 +33,14 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
         {isLoading ? (
           <ActivityIndicator size="small" color="white" />
         ) : (
-          <Text style={[styles.text, disabled && styles.disabledText]}>{children}</Text>
+          <CustomText
+            size="m"
+            weight="regular"
+            color="white"
+            style={[styles.text, disabled && styles.disabledText]}
+          >
+            {children}
+          </CustomText>
         )}
       </View>
     </TouchableOpacity>

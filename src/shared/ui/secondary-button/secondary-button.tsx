@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { colors } from '../../styles/global';
+import { CustomText } from '../text';
 
 type SecondaryButtonProps = {
   children: string;
@@ -32,14 +33,17 @@ const SecondaryButton: React.FC<SecondaryButtonProps> = ({
         {isLoading ? (
           <ActivityIndicator size="small" color="white" />
         ) : (
-          <Text
+          <CustomText
+            size="m"
+            weight="regular"
+            color="white"
             style={[
               color === 'green' ? styles.greenText : styles.orangeText,
               disabled && styles.disabledText,
             ]}
           >
             {children}
-          </Text>
+          </CustomText>
         )}
       </View>
     </TouchableOpacity>
@@ -49,7 +53,7 @@ const SecondaryButton: React.FC<SecondaryButtonProps> = ({
 const styles = StyleSheet.create({
   base: {
     borderRadius: 5,
-    paddingVertical: 10,
+    paddingVertical: 9,
     paddingHorizontal: 20,
     justifyContent: 'center',
     alignItems: 'center',
