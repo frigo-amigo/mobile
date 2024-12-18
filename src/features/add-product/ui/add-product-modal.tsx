@@ -47,6 +47,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
         name,
         category,
         quantity,
+        minQuantity,
         unit,
         manufactureDate,
         expirationDate,
@@ -56,6 +57,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
     setName('');
     setCategory('');
     setQuantity(1);
+    setMinQuantity(1);
     setUnit('шт');
     setManufactureDate('');
     setExpirationDate('');
