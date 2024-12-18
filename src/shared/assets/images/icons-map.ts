@@ -86,7 +86,7 @@ export const iconsMap: Record<string, React.FC<SvgProps>> = {
   drinks: Drinks,
   eggs: Eggs,
   'fish-and-seafood': FishAndSeafood,
-  'fruits-and-berries': FruitsAndBerries,
+  fruits: FruitsAndBerries,
   'meat-and-sausages': MeatAndSausages,
   nuts: Nuts,
   pepper: Pepper,
@@ -100,7 +100,7 @@ export const iconsMap: Record<string, React.FC<SvgProps>> = {
 
   яблоко: Apple,
   'Хлеб и хлебобулочные изделия': Bread,
-  'Сладости и дессерты': Candies,
+  'Сладости и десерты': Candies,
   'Консервированные продукты': CannedFood,
   'Крупы и макароны': Cereal,
   'Молочные продукты': Dairy,

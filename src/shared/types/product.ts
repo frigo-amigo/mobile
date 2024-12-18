@@ -11,7 +11,7 @@ export interface Product {
   category: string;
   quantity: number;
   unit: string;
-  minQuantity?: number;
+  minQuantity: number;
   manufactureDate: string;
   expirationDate: string;
 }

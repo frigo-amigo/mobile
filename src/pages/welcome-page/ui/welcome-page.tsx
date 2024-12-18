@@ -19,7 +19,7 @@ const WelcomePage: React.FC = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.navigate('MainTabs');
-    }, 1000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
