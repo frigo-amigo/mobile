@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-nati
 import { Product } from '@/shared/types/product';
 import { CustomText, Icon } from '@/shared/ui';
 import categoryIcons from '@/shared/data/categories-icons';
+import { getIcon } from '@/shared/utils/product-utils';
 
 const { width } = Dimensions.get('window');
 const cardWidth = (width - 80) / 3;
@@ -18,7 +19,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress }) =>
   const differenceInMillis = expirationDate.getTime() - manufactureDate.getTime();
   const lifeSpanInDays = differenceInMillis / (1000 * 60 * 60 * 24);
 
-  const productIcon = product.icon || categoryIcons[product.category];
+  const productIcon = getIcon(product.name, product.category);
 
   return (
     <TouchableOpacity onPress={onPress}>

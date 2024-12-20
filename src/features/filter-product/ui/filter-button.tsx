@@ -10,9 +10,9 @@ type FilterButtonProps = {
 export const FilterButton: React.FC<FilterButtonProps> = ({ onPress, isActive }) => (
   <TouchableOpacity onPress={onPress} style={styles.button}>
     {isActive ? (
-      <Icon folder="common" name="filter-gradient" width={28} height={28} />
+      <Icon name="filter-gradient" width={28} height={28} />
     ) : (
-      <Icon folder="common" name="filter" width={28} height={28} color={colors.gray90} />
+      <Icon name="filter" width={28} height={28} color={colors.gray90} />
     )}
   </TouchableOpacity>
 );

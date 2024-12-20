@@ -8,7 +8,7 @@ import AddProductPage from '@/pages/add-product-page';
 import ProfilePage from '@/pages/profile-page';
 import { Icon } from '@/shared/ui';
 
-import { StyleSheet, Image, Dimensions, Modal, View, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, Dimensions, Modal, TouchableOpacity } from 'react-native';
 import { TabBarButton } from '@/shared/ui';
 import { useState } from 'react';
 import { AddProductModal } from '@/features/add-product';
@@ -116,10 +116,7 @@ export const BottomTabNavigator = () => {
         visible={isModalVisible}
         onRequestClose={closeModal}
       >
-        <TouchableOpacity onPress={closeModal} style={styles.close}>
-          <Icon name="close" width={40} height={40} />
-        </TouchableOpacity>
-        <AddProductModal />
+        <AddProductModal closeModal={closeModal} />
       </Modal>
     </>
   );
@@ -130,11 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
-  close: {
-    alignSelf: 'flex-end',
-    top: 20,
-    right: 10,
-  },
+
   circle: {
     position: 'absolute',
     bottom: 58,

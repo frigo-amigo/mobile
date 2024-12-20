@@ -7,6 +7,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
 } from 'react-native';
 import { CustomText, Icon, IconButton, PrimaryButton, Select } from '@/shared/ui';
 import { Input } from '@/shared/ui';
@@ -20,9 +21,11 @@ import { getIcon } from '@/shared/utils/product-utils';
 
 const width = Dimensions.get('window').width;
 
-type AddProductModalProps = {};
+type AddProductModalProps = {
+  closeModal: () => void;
+};
 
-export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
+export const AddProductModal: React.FC<AddProductModalProps> = ({ closeModal }) => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -54,6 +57,8 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
       }),
     );
 
+    closeModal();
+
     setName('');
     setCategory('');
     setQuantity(1);
@@ -70,6 +75,9 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({}) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
+          <TouchableOpacity onPress={closeModal} style={styles.close}>
+            <Icon name="close" width={44} height={44} />
+          </TouchableOpacity>
           <View style={styles.icon}>
             {iconName ? (
               <Icon name={iconName} width={80} height={80} />
@@ -147,6 +155,12 @@ const styles = StyleSheet.create({
   container: {
     gap: 22,
     padding: 20,
+    paddingTop: 50,
+  },
+  close: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
   },
   icon: {
     alignItems: 'center',
