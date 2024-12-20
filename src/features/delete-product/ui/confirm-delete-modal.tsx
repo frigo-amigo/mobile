@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Modal } from 'react-native';
+import { View, StyleSheet, Modal } from 'react-native';
 
 import { colors } from '@/shared/styles/global';
 import { Checkbox, CustomText, PrimaryButton, SecondaryButton } from '@/shared/ui';

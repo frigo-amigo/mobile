@@ -1,8 +1,7 @@
-import React, { FC } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { colors } from '../../styles/global';
 import Icon from '../icon';
-import { SvgProps } from 'react-native-svg';
 
 type IconButtonProps = {
   src: string;

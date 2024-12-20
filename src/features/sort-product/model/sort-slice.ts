@@ -12,7 +12,7 @@ interface SortState {
 }
 
 const initialState: SortState = {
-  sortOption: 'alphabetical', // Сортировка по умолчанию
+  sortOption: 'alphabetical',
 };
 
 const sortSlice = createSlice({

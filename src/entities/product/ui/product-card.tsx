@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Product } from '@/shared/types/product';
 import { CustomText, Icon } from '@/shared/ui';
-import categoryIcons from '@/shared/data/categories-icons';
 import { getIcon } from '@/shared/utils/product-utils';
 
 const { width } = Dimensions.get('window');
@@ -75,8 +74,6 @@ const styles = StyleSheet.create({
   card: {
     width: cardWidth,
     height: cardWidth,
-    // marginBottom: 30,
-    // marginRight: 20,
   },
   quantityText: {
     position: 'absolute',

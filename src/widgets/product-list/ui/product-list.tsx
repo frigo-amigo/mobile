@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, Text, Dimensions } from 'react-native';
+import { useState } from 'react';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import { useProductList } from '../model/product-list-model';
 import { ProductCard } from '@/entities/product/ui/product-card';
 import { EmptyFridgeMessage } from '@/entities/product/ui/empty-fridge-message';

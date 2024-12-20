@@ -7,7 +7,6 @@ import { toggleCategory } from '../model/filter-slice';
 import Checkbox from '@/shared/ui/checkbox';
 import { colors } from '@/shared/styles/global';
 import { CustomText, Icon } from '@/shared/ui';
-import CloseIcon from '@/shared/assets/images/common/close.svg';
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 
 type FilterPanelProps = {

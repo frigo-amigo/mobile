@@ -2,16 +2,15 @@ import React from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, TextInputProps } from 'react-native';
 import { colors } from '../../styles/global';
 import Icon from '../icon';
-import CloseIcon from '@/shared/assets/images/common/close.svg';
 import { CustomText } from '../text';
 
 type InputProps = {
   placeholder?: string;
   value?: string;
   onChangeText?: (text: string) => void;
-  onClear?: () => void; // Новый пропс для действия кнопки "очистить"
+  onClear?: () => void;
   style?: any;
-  showClearButton?: boolean; // Указывает, нужно ли показывать крестик
+  showClearButton?: boolean;
   label?: string;
   keyboardType?: TextInputProps['keyboardType'];
   editable?: boolean;

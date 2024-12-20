@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { colors } from '../../styles/global';
 import Icon from '../icon';
-import DropdownArrow from '@/shared/assets/images/common/dropdown-arrow.svg';
 import { CustomText } from '../text';
 
 type SelectProps = {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, StyleSheet, Animated, Dimensions } from 'react-native';
 import { ProductList } from '@/widgets/product-list';
 import { SearchBar } from '@/features/search-product';

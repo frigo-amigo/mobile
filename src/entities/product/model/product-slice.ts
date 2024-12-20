@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product } from '@/shared/types/product';
-// import { allProducts } from '@/shared/data/data';
-import { saveProducts } from '@/shared/utils/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ProductState {
@@ -9,7 +7,6 @@ interface ProductState {
 }
 
 const initialState: ProductState = {
-  // items: allProducts,
   items: [],
 };
 
@@ -22,7 +19,6 @@ const productSlice = createSlice({
       saveToAsyncStorage(state.items);
     },
     addProduct: (state, action: PayloadAction<Product>) => {
-      // saveProducts([action.payload]);
       state.items.push(action.payload);
       saveToAsyncStorage(state.items);
     },
