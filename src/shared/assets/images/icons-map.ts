@@ -143,6 +143,7 @@ export const iconsMap: Record<string, React.FC<SvgProps>> = {
   Соусы: Sauces,
   'Специи и приправы': Spices,
   Овощи: Vegetables,
+  undefined: Undefined,
 
   яблоко: Apple,
   абрикос: Apricot,
