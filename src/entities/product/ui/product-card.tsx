@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-nati
 import { Product } from '@/shared/types/product';
 import { CustomText, Icon } from '@/shared/ui';
 import { getIcon } from '@/shared/utils/product-utils';
+import { calculateRemainingPercentage, calculateStorageDuration } from '@/shared/utils/date-utils';
 
 const { width } = Dimensions.get('window');
 const cardWidth = (width - 80) / 3;
@@ -13,10 +14,16 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress }) => {
-  const manufactureDate = new Date(product.manufactureDate);
-  const expirationDate = new Date(product.expirationDate);
-  const differenceInMillis = expirationDate.getTime() - manufactureDate.getTime();
-  const lifeSpanInDays = differenceInMillis / (1000 * 60 * 60 * 24);
+  // const manufactureDate = new Date(product.manufactureDate);
+  // const expirationDate = new Date(product.expirationDate);
+  // const differenceInMillis = expirationDate.getTime() - manufactureDate.getTime();
+  // const lifeSpanInDays = differenceInMillis / (1000 * 60 * 60 * 24);
+
+  const lifeSpanInDays = calculateStorageDuration(product.manufactureDate, product.expirationDate);
+  const remainingPercentage = calculateRemainingPercentage(
+    product.manufactureDate,
+    product.expirationDate,
+  );
 
   const productIcon = getIcon(product.name, product.category);
 
@@ -30,29 +37,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress }) =>
           </CustomText>
         </View>
         <View style={styles.date}>
-          {lifeSpanInDays > 10 && (
+          {remainingPercentage > 50 && (
             <Icon name="date-circle-green" width={cardWidth / 2.9} height={cardWidth / 2.9} />
           )}
-          {lifeSpanInDays <= 10 && lifeSpanInDays > 4 && (
+          {remainingPercentage <= 50 && remainingPercentage > 20 && (
             <Icon name="date-circle-orange" width={cardWidth / 2.9} height={cardWidth / 2.9} />
           )}
-          {lifeSpanInDays <= 3 && (
+          {remainingPercentage <= 20 && (
             <Icon name="date-circle-red" width={cardWidth / 2.9} height={cardWidth / 2.9} />
           )}
 
-          {lifeSpanInDays < 31 && lifeSpanInDays > 1 && (
+          {remainingPercentage > 0 && (
             <CustomText size="xs" weight="regular" color="white" style={styles.dateText}>
-              {lifeSpanInDays} д
+              {lifeSpanInDays} дн
             </CustomText>
           )}
-          {lifeSpanInDays >= 31 && lifeSpanInDays < 365 && (
+          {remainingPercentage === 0 && (
             <CustomText size="xs" weight="regular" color="white" style={styles.dateText}>
-              &gt; {(lifeSpanInDays / 30).toFixed(0)} м
-            </CustomText>
-          )}
-          {Number((lifeSpanInDays / 30).toFixed(0)) >= 12 && (
-            <CustomText size="xs" weight="regular" color="white" style={styles.dateText}>
-              &gt; {(lifeSpanInDays / 365).toFixed(0)} л
+              Истек
             </CustomText>
           )}
         </View>

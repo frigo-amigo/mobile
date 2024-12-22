@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.gray90,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
   },
   clearButton: {
     marginRight: 10,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Keyboard } from 'react-native';
 import { colors } from '../../styles/global';
 import Icon from '../icon';
 import { CustomText } from '../text';
@@ -24,6 +24,11 @@ const Select: React.FC<SelectProps> = ({ options, onSelect, defaultOption, style
     }
   };
 
+  const toggleSelect = () => {
+    Keyboard.dismiss();
+    setIsOpen(!isOpen);
+  };
+
   return (
     <View style={[styles.container, style]}>
       {label && (
@@ -31,9 +36,9 @@ const Select: React.FC<SelectProps> = ({ options, onSelect, defaultOption, style
           {label}
         </CustomText>
       )}
-      <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={styles.select}>
+      <TouchableOpacity onPress={toggleSelect} style={styles.select}>
         <Text style={styles.text}>{selected}</Text>
-        <Icon name="dropdown-arrow" width={24} height={23} />
+        <Icon name="dropdown-arrow" width={24} height={23} style={styles.icon} />
       </TouchableOpacity>
       {isOpen && (
         <View style={styles.dropdown}>
@@ -64,7 +69,7 @@ const styles = StyleSheet.create({
     maxHeight: 43,
     borderRadius: 5,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -96,6 +101,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -17,
     lineHeight: 17,
+  },
+  icon: {
+    marginRight: -4,
   },
 });
 

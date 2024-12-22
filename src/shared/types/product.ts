@@ -8,6 +8,7 @@ export interface Product {
   minQuantity: number;
   manufactureDate: string;
   expirationDate: string;
+  storageDuration: string;
 }
 
 export const units: string[] = ['кг', 'шт', 'л', 'уп'];

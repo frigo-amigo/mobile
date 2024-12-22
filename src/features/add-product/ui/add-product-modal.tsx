@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -33,11 +33,17 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ closeModal }) 
   const [minQuantity, setMinQuantity] = useState(1);
   const [manufactureDate, setManufactureDate] = useState('');
   const [expirationDate, setExpirationDate] = useState('');
+  const [storageDuration, setStorageDuration] = useState('');
   const dispatch = useDispatch();
-  const storageDuration = calculateStorageDuration(manufactureDate, expirationDate);
+  // const storageDuration = calculateStorageDuration(manufactureDate, expirationDate);
   const iconName = getIcon(name, category);
 
   const generateId = () => `${Date.now()}`;
+
+  useEffect(() => {
+    const duration = calculateStorageDuration(manufactureDate, expirationDate);
+    setStorageDuration(duration > 0 ? `${duration} дн.` : '—');
+  }, [manufactureDate, expirationDate]);
 
   const handleAddProduct = () => {
     if (!name.trim()) return;
@@ -54,6 +60,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ closeModal }) 
         unit,
         manufactureDate,
         expirationDate,
+        storageDuration,
       }),
     );
 
@@ -66,6 +73,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ closeModal }) 
     setUnit('шт');
     setManufactureDate('');
     setExpirationDate('');
+    setStorageDuration('');
   };
 
   return (
@@ -107,7 +115,7 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ closeModal }) 
               value={String(quantity)}
               onChangeText={(value) => setQuantity(Math.max(Number(value)))}
               keyboardType="numeric"
-              style={{ maxWidth: 70 }}
+              style={{ maxWidth: 70, textAlign: 'center' }}
             />
             <IconButton src="plus" onPress={() => setQuantity(Math.max(quantity + 1))} />
             <Select options={units} defaultOption={unit} onSelect={setUnit} />
@@ -128,6 +136,8 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ closeModal }) 
                 onChangeText={(text) => {
                   setManufactureDate(formatDateInput(text));
                 }}
+                onClear={() => setManufactureDate('')}
+                showClearButton
               />
             </View>
             <View style={styles.dateContainer}>
@@ -139,11 +149,18 @@ export const AddProductModal: React.FC<AddProductModalProps> = ({ closeModal }) 
                 onChangeText={(text) => {
                   setExpirationDate(formatDateInput(text));
                 }}
+                onClear={() => setExpirationDate('')}
+                showClearButton
               />
             </View>
           </View>
 
-          <Input value={storageDuration} editable={false} label="Хранить не более" />
+          <Input
+            value={storageDuration}
+            editable={false}
+            label="Хранить не более"
+            style={styles.storage}
+          />
           <PrimaryButton children="Добавить" width="max" onPress={handleAddProduct} />
         </View>
       </TouchableWithoutFeedback>
@@ -187,5 +204,8 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     flex: 1,
+  },
+  storage: {
+    backgroundColor: colors.white,
   },
 });

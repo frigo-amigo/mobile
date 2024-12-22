@@ -35,8 +35,9 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
   const [manufactureDate, setManufactureDate] = useState(product.manufactureDate);
   const [expirationDate, setExpirationDate] = useState(product.expirationDate);
   const [minQuantity, setMinQuantity] = useState(product.minQuantity);
+  const [storageDuration, setStorageDuration] = useState(product.storageDuration);
   const dispatch = useDispatch();
-  const storageDuration = calculateStorageDuration(manufactureDate, expirationDate);
+  // const storageDuration = calculateStorageDuration(manufactureDate, expirationDate);
   const iconName = getIcon(name, category);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -59,6 +60,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
         manufactureDate,
         expirationDate,
         minQuantity,
+        storageDuration,
       }),
     );
     onClose();
@@ -114,7 +116,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
                   value={String(quantity)}
                   onChangeText={(value) => setQuantity(Math.max(Number(value)))}
                   keyboardType="numeric"
-                  style={{ maxWidth: 70 }}
+                  style={{ maxWidth: 70, textAlign: 'center' }}
                 />
                 <IconButton src="plus" onPress={() => setQuantity(Math.max(quantity + 1))} />
                 <Select options={units} defaultOption={unit} onSelect={setUnit} />
@@ -135,6 +137,8 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
                     onChangeText={(text) => {
                       setManufactureDate(formatDateInput(text));
                     }}
+                    onClear={() => setManufactureDate('')}
+                    showClearButton
                   />
                 </View>
                 <View style={styles.dateContainer}>
@@ -146,11 +150,18 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
                     onChangeText={(text) => {
                       setExpirationDate(formatDateInput(text));
                     }}
+                    onClear={() => setExpirationDate('')}
+                    showClearButton
                   />
                 </View>
               </View>
 
-              <Input value={storageDuration} editable={false} label="Хранить не более" />
+              <Input
+                value={storageDuration}
+                editable={false}
+                label="Хранить не более"
+                style={styles.storage}
+              />
               <PrimaryButton children="Сохранить" width="max" onPress={handleSave} />
             </View>
           </KeyboardAvoidingView>
@@ -204,6 +215,9 @@ const styles = StyleSheet.create({
   },
   dateContainer: {
     flex: 1,
+  },
+  storage: {
+    backgroundColor: colors.white,
   },
 });
 
