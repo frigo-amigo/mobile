@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
+import { View, StyleSheet } from 'react-native';
 import CustomText from './text';
 
 const meta: Meta<typeof CustomText> = {
@@ -16,6 +16,11 @@ export const Hello: Story = {
     weight: 'regular',
     color: 'grey90',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <CustomText {...args} />
+    </View>
+  ),
 };
 
 export const CategoryTitle: Story = {
@@ -25,6 +30,11 @@ export const CategoryTitle: Story = {
     weight: 'medium',
     color: 'green',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <CustomText {...args} />
+    </View>
+  ),
 };
 
 export const SortTitle: Story = {
@@ -34,6 +44,11 @@ export const SortTitle: Story = {
     weight: 'medium',
     color: 'grey90',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <CustomText {...args} />
+    </View>
+  ),
 };
 
 export const SortItem: Story = {
@@ -43,6 +58,11 @@ export const SortItem: Story = {
     weight: 'regular',
     color: 'grey90',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <CustomText {...args} />
+    </View>
+  ),
 };
 
 export const Delete: Story = {
@@ -52,6 +72,11 @@ export const Delete: Story = {
     weight: 'medium',
     color: 'red50',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <CustomText {...args} />
+    </View>
+  ),
 };
 
 export const DontAskAgain: Story = {
@@ -61,6 +86,11 @@ export const DontAskAgain: Story = {
     weight: 'regular',
     color: 'grey50',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <CustomText {...args} />
+    </View>
+  ),
 };
 
 export const ProductName: Story = {
@@ -70,4 +100,16 @@ export const ProductName: Story = {
     weight: 'regular',
     color: 'grey90',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <CustomText {...args} />
+    </View>
+  ),
 };
+
+const styles = StyleSheet.create({
+  centeredContainer: {
+    alignItems: 'center',
+    paddingTop: 100,
+  },
+});

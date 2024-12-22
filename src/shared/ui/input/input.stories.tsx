@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { View, StyleSheet } from 'react-native';
 import Input from './input';
 
 const meta: Meta<typeof Input> = {
@@ -13,6 +14,11 @@ export const InputDefault: Story = {
     placeholder: 'Введите текст',
     value: '',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <Input {...args} />
+    </View>
+  ),
 };
 
 export const InputWithIcon: Story = {
@@ -20,4 +26,19 @@ export const InputWithIcon: Story = {
     placeholder: 'Введите текст',
     value: '',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <Input {...args} />
+    </View>
+  ),
 };
+
+const styles = StyleSheet.create({
+  centeredContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    paddingTop: 100,
+    maxWidth: 300,
+  },
+});

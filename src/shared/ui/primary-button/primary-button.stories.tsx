@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
+import { View, StyleSheet } from 'react-native';
 import PrimaryButton from './primary-button';
 
 const meta: Meta<typeof PrimaryButton> = {
@@ -14,6 +14,11 @@ export const PrimaryGreen: Story = {
     children: 'Добавить в холодильник',
     color: 'green',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <PrimaryButton {...args} />
+    </View>
+  ),
 };
 
 export const PrimaryOragne: Story = {
@@ -21,6 +26,11 @@ export const PrimaryOragne: Story = {
     children: 'Удалить',
     color: 'orange',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <PrimaryButton {...args} />
+    </View>
+  ),
 };
 
 export const Disabled: Story = {
@@ -29,20 +39,17 @@ export const Disabled: Story = {
     disabled: true,
     color: 'green',
   },
+  render: (args) => (
+    <View style={styles.centeredContainer}>
+      <PrimaryButton {...args} />
+    </View>
+  ),
 };
 
-export const MinWidth: Story = {
-  args: {
-    children: 'Добавить в холодильник',
-    color: 'green',
-    width: 'min',
+const styles = StyleSheet.create({
+  centeredContainer: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    paddingTop: 100,
   },
-};
-
-export const MaxWidth: Story = {
-  args: {
-    children: 'Удалить',
-    color: 'orange',
-    width: 'max',
-  },
-};
+});
