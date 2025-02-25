@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Keyboard } from 'react-native';
 import { colors } from '../../styles/global';
 import Icon from '../icon';
@@ -7,14 +7,29 @@ import { CustomText } from '../text';
 type SelectProps = {
   options: string[];
   onSelect: (value: string) => void;
+  selectedOption?: string; // Добавлен пропс для внешнего управления
   defaultOption?: string;
   style?: any;
   label?: string;
 };
 
-const Select: React.FC<SelectProps> = ({ options, onSelect, defaultOption, style, label }) => {
-  const [selected, setSelected] = useState(defaultOption || options[0]);
+const Select: React.FC<SelectProps> = ({
+  options,
+  onSelect,
+  selectedOption,
+  defaultOption,
+  style,
+  label,
+}) => {
+  const [selected, setSelected] = useState(selectedOption || defaultOption || options[0]);
   const [isOpen, setIsOpen] = useState(false);
+
+  // Обновление локального состояния при изменении `selectedOption`
+  useEffect(() => {
+    if (selectedOption) {
+      setSelected(selectedOption);
+    }
+  }, [selectedOption]);
 
   const handleSelect = (option: string) => {
     setSelected(option);

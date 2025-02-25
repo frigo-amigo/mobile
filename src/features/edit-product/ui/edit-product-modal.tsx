@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -41,7 +41,14 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
   const iconName = getIcon(name, category);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (manufactureDate && expirationDate) {
+      const duration = calculateStorageDuration(manufactureDate, expirationDate);
+      setStorageDuration(duration > 0 ? `${duration} дн.` : '—');
+    }
+  }, [manufactureDate, expirationDate]);
+
+  useEffect(() => {
     if (isVisible) {
       bottomSheetModalRef.current?.present();
     } else {
@@ -103,7 +110,8 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose, i
               />
               <Select
                 options={categories}
-                defaultOption="Выберите категорию"
+                selectedOption={category}
+                defaultOption={category}
                 onSelect={setCategory}
                 label="Категория"
               />

@@ -15,8 +15,8 @@ export const MainStack = () => {
   return (
     <BottomSheetModalProvider>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
         <Stack.Screen name="Welcome" component={WelcomePage} initialParams={{ userName: '' }} />
+        <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
       </Stack.Navigator>
     </BottomSheetModalProvider>
   );

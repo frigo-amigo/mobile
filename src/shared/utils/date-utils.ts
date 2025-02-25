@@ -132,3 +132,26 @@ export const formatDateInput = (text: string): string => {
 
   return formatted;
 };
+
+export const formatDate = (dateString: string): number => {
+  // Проверяем, что дата имеет правильный формат
+  if (!/\d{2}\.\d{2}\.\d{4}/.test(dateString)) {
+    console.error(`Invalid date format: ${dateString}`);
+    return NaN;
+  }
+
+  const [day, month, year] = dateString.split('.');
+
+  // Преобразуем в формат YYYY-MM-DD, который JavaScript понимает
+  const formattedDate = `${year}-${month}-${day}`;
+
+  const parsedDate = new Date(formattedDate);
+
+  // Проверка на валидность даты
+  if (isNaN(parsedDate.getTime())) {
+    console.error(`Invalid date: ${dateString}`);
+    return NaN;
+  }
+
+  return parsedDate.getTime();
+};
