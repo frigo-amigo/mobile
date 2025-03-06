@@ -24,25 +24,48 @@
 
 // export default ProfilePage;
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, selectIsEditing } from 'entities/user/model/selectors';
-import { toggleEditMode, updateUser } from 'entities/user/model/user-slice';
+import { initUser, toggleEditMode, updateUser } from 'entities/user/model/user-slice';
 import { Icon, Input, PrimaryButton, CustomText } from '@/shared/ui';
 import { colors } from '@/shared/styles/global';
+import { initDatabase } from '@/shared/lib/db';
+import { AppDispatch } from '@/app/store';
 
 const ProfilePage = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
   const isEditing = useSelector(selectIsEditing);
 
-  const [name, setName] = React.useState(user.name);
-  const [email, setEmail] = React.useState(user.email);
+  const [name, setName] = React.useState('');
+  const [email, setEmail] = React.useState('');
+
+  useEffect(() => {
+    // Инициализация БД и загрузка данных
+    initDatabase()
+      .then(() => dispatch(initUser()))
+      .catch((error) => console.error('DB init failed:', error));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const handleSave = () => {
-    dispatch(updateUser({ name, email }));
+    if (user) {
+      dispatch(updateUser({ id: user.id, name, email }));
+      dispatch(toggleEditMode());
+    }
   };
+
+  if (!user) {
+    return <CustomText size="l">Loading...</CustomText>;
+  }
 
   return (
     <View style={styles.container}>

@@ -1,34 +1,70 @@
 // entities/user/model/userSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '@/entities/user/types';
+import { getUser, insertUser, updateUserDb } from 'shared/lib/db';
+import { User } from '../types';
 
-const initialState: {
-  user: User;
+interface UserState {
+  user: User | null;
   isEditing: boolean;
-} = {
-  user: {
-    id: '1',
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    avatar:
-      'https://avatars.mds.yandex.net/i?id=31b2bf0850da1e7a6af9a680bf9f9a61_l-3600087-images-thumbs&n=13', // моковая аватарка
-  },
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: UserState = {
+  user: null,
   isEditing: false,
+  loading: false,
+  error: null,
 };
 
+// Асинхронные действия можно вынести в thunk, но для простоты оставим здесь
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setUser(state, action: PayloadAction<User>) {
+      state.user = action.payload;
+      state.loading = false;
+    },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
+    },
+    setError(state, action: PayloadAction<string | null>) {
+      state.error = action.payload;
+    },
     toggleEditMode(state) {
       state.isEditing = !state.isEditing;
-    },
-    updateUser(state, action: PayloadAction<Partial<User>>) {
-      state.user = { ...state.user, ...action.payload };
-      state.isEditing = false;
     },
   },
 });
 
-export const { toggleEditMode, updateUser } = userSlice.actions;
+export const { setUser, setLoading, setError, toggleEditMode } = userSlice.actions;
+
+// Thunk для инициализации пользователя
+export const initUser = () => async (dispatch: any) => {
+  try {
+    dispatch(setLoading(true));
+    const user = await getUser();
+    dispatch(setUser(user));
+  } catch (error) {
+    dispatch(setError((error as Error).message));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+// Thunk для обновления пользователя
+export const updateUser = (userData: Partial<User> & { id: string }) => async (dispatch: any) => {
+  try {
+    dispatch(setLoading(true));
+    await updateUserDb(userData);
+    const updatedUser = await getUser();
+    dispatch(setUser(updatedUser));
+  } catch (error) {
+    dispatch(setError((error as Error).message));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
 export default userSlice.reducer;
