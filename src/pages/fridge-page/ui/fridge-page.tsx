@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, StyleSheet, Animated, Dimensions } from 'react-native';
 import { ProductList } from '@/widgets/product-list';
 import { SearchBar } from '@/features/search-product';
@@ -8,15 +8,26 @@ import { SortButton } from '@/features/sort-product';
 import { colors } from '@/shared/styles/global';
 import { FilterPanel } from '@/features/filter-product';
 import { SortPanel } from '@/features/sort-product/ui/sort-panel';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@/app/store';
+import { selectUser } from '@/entities/user/model/selectors';
+import { loadProducts } from '@/entities/product/model/product-slice';
 
 const { width } = Dimensions.get('window');
 
 const FridgePage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector(selectUser);
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [isFilterVisible, setFilterVisible] = useState(false);
   const [isSortVisible, setSortVisible] = useState(false);
-
   const [searchWidth] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    if (user) {
+      dispatch(loadProducts(user.id)); // Загружаем продукты при монтировании
+    }
+  }, [dispatch, user]);
 
   const toggleSearch = () => {
     if (isSearchVisible) {

@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import productReducer, {
-  loadFromAsyncStorage,
-  setProducts,
-} from '@/entities/product/model/product-slice';
+import productReducer, { loadProducts, setProducts } from '@/entities/product/model/product-slice';
 import filterReducer from '@/features/filter-product/model/filter-slice';
 import sortReducer from '@/features/sort-product/model/sort-slice';
 import searchReducer from '@/features/search-product/model/search-slice';
-import userReducer from 'entities/user/model/user-slice';
+import userReducer, { initUser } from 'entities/user/model/user-slice';
+import { copyDatabaseToDocuments, initDatabase } from '@/shared/lib/db';
 
 export const store = configureStore({
   reducer: {
@@ -19,8 +17,16 @@ export const store = configureStore({
 });
 
 const initializeState = async () => {
-  const products = await loadFromAsyncStorage();
-  store.dispatch(setProducts(products));
+  try {
+    await initDatabase();
+    const user = await store.dispatch(initUser()); // Получаем результат напрямую
+    if (user) {
+      await store.dispatch(loadProducts(user.id));
+      await copyDatabaseToDocuments(); // Копируем базу при запуске
+    }
+  } catch (error) {
+    console.error('Failed to initialize state:', error);
+  }
 };
 
 initializeState();

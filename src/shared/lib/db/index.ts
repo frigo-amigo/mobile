@@ -2,6 +2,8 @@
 import { User } from '@/entities/user/types';
 import * as SQLite from 'expo-sqlite';
 import { Product } from 'shared/types/product';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 
 // Открываем БД синхронно
 const db = SQLite.openDatabaseSync('myApp.db');
@@ -50,9 +52,10 @@ export const getUser = async (): Promise<User> => {
     } else {
       const mockUser: User = {
         id: '1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        avatar: 'https://via.placeholder.com/150',
+        name: 'Иван',
+        email: 'ivan.vanyaaa@example.com',
+        avatar:
+          'https://avatars.mds.yandex.net/i?id=31b2bf0850da1e7a6af9a680bf9f9a61_l-3600087-images-thumbs&n=13',
       };
       await insertUser(mockUser);
       return mockUser;
@@ -134,6 +137,62 @@ export const getProducts = async (userId: string): Promise<Product[]> => {
     return result;
   } catch (error) {
     console.error('Failed to get products:', error);
+    throw error;
+  }
+};
+
+export const updateProduct = async (product: Product & { userId: string }): Promise<void> => {
+  try {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync(
+        `UPDATE products SET 
+          name = ?, icon = ?, category = ?, quantity = ?, unit = ?, 
+          minQuantity = ?, manufactureDate = ?, expirationDate = ?, 
+          storageDuration = ? WHERE id = ? AND userId = ?;`,
+        [
+          product.name,
+          product.icon ?? null,
+          product.category,
+          product.quantity,
+          product.unit,
+          product.minQuantity,
+          product.manufactureDate,
+          product.expirationDate,
+          product.storageDuration,
+          product.id,
+          product.userId,
+        ],
+      );
+    });
+  } catch (error) {
+    console.error('Failed to update product:', error);
+    throw error;
+  }
+};
+
+export const deleteProduct = async (productId: string): Promise<void> => {
+  try {
+    await db.withTransactionAsync(async () => {
+      await db.runAsync('DELETE FROM products WHERE id = ?;', [productId]);
+    });
+  } catch (error) {
+    console.error('Failed to delete product:', error);
+    throw error;
+  }
+};
+
+// Функция для копирования бд с устройства
+export const copyDatabaseToDocuments = async () => {
+  try {
+    const dbPath = `${FileSystem.documentDirectory}SQLite/myApp.db`; // Путь к базе в песочнице
+    const destPath = `${FileSystem.documentDirectory}myApp.db`; // Путь для копии
+    await FileSystem.copyAsync({ from: dbPath, to: destPath });
+    console.log('Database copied to:', destPath);
+    // Дополнительно: делимся файлом для извлечения
+    await Sharing.shareAsync(destPath);
+    return destPath;
+  } catch (error) {
+    console.error('Failed to copy database:', error);
     throw error;
   }
 };

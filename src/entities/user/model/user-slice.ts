@@ -1,6 +1,7 @@
-// entities/user/model/userSlice.ts
+// entities/user/model/user-slice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getUser, insertUser, updateUserDb } from 'shared/lib/db';
+import { AppDispatch } from '@/app/store';
+import { getUser, insertUser, updateUserDb } from '@/shared/lib/db';
 import { User } from '../types';
 
 interface UserState {
@@ -17,7 +18,6 @@ const initialState: UserState = {
   error: null,
 };
 
-// Асинхронные действия можно вынести в thunk, но для простоты оставим здесь
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -41,30 +41,33 @@ const userSlice = createSlice({
 export const { setUser, setLoading, setError, toggleEditMode } = userSlice.actions;
 
 // Thunk для инициализации пользователя
-export const initUser = () => async (dispatch: any) => {
+export const initUser = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(setLoading(true));
     const user = await getUser();
     dispatch(setUser(user));
+    return user; // Возвращаем пользователя для использования в initializeState
   } catch (error) {
     dispatch(setError((error as Error).message));
+    throw error;
   } finally {
     dispatch(setLoading(false));
   }
 };
 
 // Thunk для обновления пользователя
-export const updateUser = (userData: Partial<User> & { id: string }) => async (dispatch: any) => {
-  try {
-    dispatch(setLoading(true));
-    await updateUserDb(userData);
-    const updatedUser = await getUser();
-    dispatch(setUser(updatedUser));
-  } catch (error) {
-    dispatch(setError((error as Error).message));
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
+export const updateUser =
+  (userData: Partial<User> & { id: string }) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(setLoading(true));
+      await updateUserDb(userData);
+      const updatedUser = await getUser();
+      dispatch(setUser(updatedUser));
+    } catch (error) {
+      dispatch(setError((error as Error).message));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
 
 export default userSlice.reducer;

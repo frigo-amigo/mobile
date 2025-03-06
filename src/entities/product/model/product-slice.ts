@@ -1,13 +1,24 @@
+// entities/product/model/product-slice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product } from '@/shared/types/product';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppDispatch } from '@/app/store';
+import {
+  getProducts,
+  insertProduct,
+  updateProduct,
+  deleteProduct as deleteProductDb,
+} from '@/shared/lib/db';
 
 interface ProductState {
   items: Product[];
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: ProductState = {
   items: [],
+  loading: false,
+  error: null,
 };
 
 const productSlice = createSlice({
@@ -16,51 +27,72 @@ const productSlice = createSlice({
   reducers: {
     setProducts: (state, action: PayloadAction<Product[]>) => {
       state.items = action.payload;
-      saveToAsyncStorage(state.items);
+      state.loading = false;
     },
-    addProduct: (state, action: PayloadAction<Product>) => {
-      state.items.push(action.payload);
-      saveToAsyncStorage(state.items);
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
-    editProduct: (state, action: PayloadAction<Product>) => {
-      const index = state.items.findIndex((product) => product.id === action.payload.id);
-      if (index !== -1) {
-        state.items[index] = action.payload;
-      }
-      saveToAsyncStorage(state.items);
-    },
-    deleteProduct(state, action: PayloadAction<string>) {
-      state.items = state.items.filter((product) => product.id !== action.payload);
-      saveToAsyncStorage(state.items);
+    setError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
     },
   },
 });
 
-export const { addProduct, editProduct, deleteProduct, setProducts } = productSlice.actions;
+// Thunks
+export const loadProducts = (userId: string) => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(setLoading(true));
+    const products = await getProducts(userId);
+    dispatch(setProducts(products));
+  } catch (error) {
+    dispatch(setError((error as Error).message));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+export const addProduct = (product: Product, userId: string) => async (dispatch: AppDispatch) => {
+  try {
+    dispatch(setLoading(true));
+    const productWithUserId = { ...product, userId };
+    await insertProduct(productWithUserId);
+    const updatedProducts = await getProducts(userId);
+    dispatch(setProducts(updatedProducts));
+  } catch (error) {
+    dispatch(setError((error as Error).message));
+  } finally {
+    dispatch(setLoading(false));
+  }
+};
+
+export const editProduct =
+  (updatedProduct: Product, userId: string) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(setLoading(true));
+      const productWithUserId = { ...updatedProduct, userId };
+      await updateProduct(productWithUserId);
+      const updatedProducts = await getProducts(userId);
+      dispatch(setProducts(updatedProducts));
+    } catch (error) {
+      dispatch(setError((error as Error).message));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+export const deleteProduct =
+  (productId: string, userId: string) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(setLoading(true));
+      await deleteProductDb(productId);
+      const updatedProducts = await getProducts(userId);
+      dispatch(setProducts(updatedProducts));
+    } catch (error) {
+      dispatch(setError((error as Error).message));
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+export const { setProducts, setLoading, setError } = productSlice.actions;
 export default productSlice.reducer;
-
-export const saveToAsyncStorage = async (products: Product[]) => {
-  try {
-    await AsyncStorage.setItem('products', JSON.stringify(products));
-  } catch (error) {
-    console.error('Failed to save products to AsyncStorage:', error);
-  }
-};
-
-export const loadFromAsyncStorage = async () => {
-  try {
-    const productsJson = await AsyncStorage.getItem('products');
-    return productsJson ? JSON.parse(productsJson) : [];
-  } catch (error) {
-    console.error('Failed to load products from AsyncStorage:', error);
-    return [];
-  }
-};
-
-export const removeFromAsyncStorage = async () => {
-  try {
-    await AsyncStorage.removeItem('products');
-  } catch (error) {
-    console.error('Failed to remove products from AsyncStorage:', error);
-  }
-};
