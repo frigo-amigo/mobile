@@ -6,6 +6,8 @@ import productReducer, {
 import filterReducer from '@/features/filter-product/model/filter-slice';
 import sortReducer from '@/features/sort-product/model/sort-slice';
 import searchReducer from '@/features/search-product/model/search-slice';
+import shoppingListReducer from '@/entities/shopping-list/model/slice';
+import userReducer from 'entities/user/model/user-slice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +15,8 @@ export const store = configureStore({
     filter: filterReducer,
     sort: sortReducer,
     search: searchReducer,
+    user: userReducer,
+    shoppingList: shoppingListReducer,
   },
 });
 
