@@ -14,11 +14,6 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress }) => {
-  // const manufactureDate = new Date(product.manufactureDate);
-  // const expirationDate = new Date(product.expirationDate);
-  // const differenceInMillis = expirationDate.getTime() - manufactureDate.getTime();
-  // const lifeSpanInDays = differenceInMillis / (1000 * 60 * 60 * 24);
-
   const lifeSpanInDays = calculateStorageDuration(product.manufactureDate, product.expirationDate);
   const remainingPercentage = calculateRemainingPercentage(
     product.manufactureDate,

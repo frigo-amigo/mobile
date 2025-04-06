@@ -7,7 +7,7 @@ import { CustomText } from '../text';
 type SelectProps = {
   options: string[];
   onSelect: (value: string) => void;
-  selectedOption?: string; // Добавлен пропс для внешнего управления
+  selectedOption?: string;
   defaultOption?: string;
   style?: any;
   label?: string;
@@ -24,7 +24,6 @@ const Select: React.FC<SelectProps> = ({
   const [selected, setSelected] = useState(selectedOption || defaultOption || options[0]);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Обновление локального состояния при изменении `selectedOption`
   useEffect(() => {
     if (selectedOption) {
       setSelected(selectedOption);

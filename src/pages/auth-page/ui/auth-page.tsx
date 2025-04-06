@@ -24,14 +24,12 @@ const logoSvg = `<svg width="419" height="198" viewBox="0 0 419 198" fill="none"
 `;
 
 export const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true); // Состояние для переключения между входом и регистрацией
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <View style={styles.container}>
-      {/* Логотип */}
       <SvgXml xml={logoSvg} width="100%" style={styles.logo} />
 
-      {/* Переключатель */}
       <View style={styles.tabContainer}>
         <Pressable
           style={[styles.tab, isLogin ? styles.activeTab : null]}
@@ -51,7 +49,6 @@ export const AuthPage = () => {
         </Pressable>
       </View>
 
-      {/* Форма */}
       {isLogin ? <LoginForm /> : <RegisterForm />}
     </View>
   );

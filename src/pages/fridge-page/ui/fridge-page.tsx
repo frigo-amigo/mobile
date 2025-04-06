@@ -25,7 +25,7 @@ const FridgePage = () => {
 
   useEffect(() => {
     if (user) {
-      dispatch(loadProducts(user.id)); // Загружаем продукты при монтировании
+      dispatch(loadProducts(user.id));
     }
   }, [dispatch, user]);
 

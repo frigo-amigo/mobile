@@ -1,4 +1,3 @@
-// entities/product/model/product-slice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Product } from '@/shared/types/product';
 import { AppDispatch } from '@/app/store';
@@ -38,7 +37,6 @@ const productSlice = createSlice({
   },
 });
 
-// Thunks
 export const loadProducts = (userId: string) => async (dispatch: AppDispatch) => {
   try {
     dispatch(setLoading(true));

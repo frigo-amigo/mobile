@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser, selectIsEditing, selectUserLoading } from 'entities/user/model/selectors';
-import { fetchUser, toggleEditMode, updateUser } from 'entities/user/model/user-slice'; // Убрали fetchUser
+import { fetchUser, toggleEditMode, updateUser } from 'entities/user/model/user-slice';
 import { Icon, Input, PrimaryButton, CustomText } from '@/shared/ui';
 import { colors } from '@/shared/styles/global';
 import { AppDispatch } from '@/app/store';
 import { logout } from 'entities/user/model/auth-slice';
-import { useNavigation } from '@react-navigation/native';
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -20,11 +19,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (!user && !isLoading) {
-      dispatch(fetchUser()); // Загружаем данные пользователя, если их нет
+      dispatch(fetchUser());
     }
   }, [user, isLoading, dispatch]);
 
-  // Устанавливаем начальные значения только при изменении user
   useEffect(() => {
     if (user) {
       setName(user.username);
@@ -42,7 +40,6 @@ const ProfilePage = () => {
     dispatch(logout());
   };
 
-  // Если пользователь не загружен, показываем загрузку
   if (!user) {
     return <CustomText size="l">Loading...</CustomText>;
   }

@@ -24,7 +24,7 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 const width = Dimensions.get('window').width;
 
 type ProductFormModalProps = {
-  product?: Product; // Опционально для редактирования
+  product?: Product;
   isVisible: boolean;
   onClose: () => void;
 };

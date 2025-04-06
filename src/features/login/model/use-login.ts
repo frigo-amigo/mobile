@@ -19,7 +19,7 @@ export const useLogin = () => {
       await dispatch(login({ email, password })).unwrap();
       navigation.reset({
         index: 0,
-        routes: [{ name: 'MainTabs' }], // Перенаправление на MainTabs
+        routes: [{ name: 'MainTabs' }],
       });
     } catch (err) {
       console.error('Login error:', err);
