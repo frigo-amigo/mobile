@@ -52,7 +52,7 @@ export const getUser = async (): Promise<User> => {
     } else {
       const mockUser: User = {
         id: '1',
-        name: 'Иван',
+        username: 'Иван',
         email: 'ivan.vanyaaa@example.com',
         avatar:
           'https://avatars.mds.yandex.net/i?id=31b2bf0850da1e7a6af9a680bf9f9a61_l-3600087-images-thumbs&n=13',
@@ -72,7 +72,7 @@ export const insertUser = async (user: User): Promise<void> => {
     await db.withTransactionAsync(async () => {
       await db.runAsync(
         'INSERT OR REPLACE INTO users (id, name, email, avatar) VALUES (?, ?, ?, ?);',
-        [user.id, user.name, user.email, user.avatar ?? null], // Приводим undefined к null
+        [user.id, user.username, user.email, user.avatar ?? null], // Приводим undefined к null
       );
     });
   } catch (error) {
@@ -86,7 +86,7 @@ export const updateUserDb = async (user: Partial<User> & { id: string }): Promis
   try {
     await db.withTransactionAsync(async () => {
       await db.runAsync('UPDATE users SET name = ?, email = ?, avatar = ? WHERE id = ?;', [
-        user.name ?? null, // Приводим undefined к null
+        user.username ?? null, // Приводим undefined к null
         user.email ?? null, // Приводим undefined к null
         user.avatar ?? null, // Приводим undefined к null
         user.id,

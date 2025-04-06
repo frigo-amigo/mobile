@@ -1,68 +1,48 @@
-// import React from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-
-// const ProfilePage = () => {
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.text}>Страница профиля</Text>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: '#FFFFFF',
-//   },
-//   text: {
-//     fontSize: 24,
-//     color: '#393A3B',
-//   },
-// });
-
-// export default ProfilePage;
-
-import React, { useEffect } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectUser, selectIsEditing } from 'entities/user/model/selectors';
-import { initUser, toggleEditMode, updateUser } from 'entities/user/model/user-slice';
+import { selectUser, selectIsEditing, selectUserLoading } from 'entities/user/model/selectors';
+import { fetchUser, toggleEditMode, updateUser } from 'entities/user/model/user-slice'; // Убрали fetchUser
 import { Icon, Input, PrimaryButton, CustomText } from '@/shared/ui';
 import { colors } from '@/shared/styles/global';
-import { initDatabase } from '@/shared/lib/db';
 import { AppDispatch } from '@/app/store';
+import { logout } from 'entities/user/model/auth-slice';
+import { useNavigation } from '@react-navigation/native';
 
 const ProfilePage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
   const isEditing = useSelector(selectIsEditing);
+  const isLoading = useSelector(selectUserLoading);
 
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
-    // Инициализация БД и загрузка данных
-    initDatabase()
-      .then(() => dispatch(initUser()))
-      .catch((error) => console.error('DB init failed:', error));
-  }, [dispatch]);
+    if (!user && !isLoading) {
+      dispatch(fetchUser()); // Загружаем данные пользователя, если их нет
+    }
+  }, [user, isLoading, dispatch]);
 
+  // Устанавливаем начальные значения только при изменении user
   useEffect(() => {
     if (user) {
-      setName(user.name);
+      setName(user.username);
       setEmail(user.email);
     }
   }, [user]);
 
   const handleSave = () => {
     if (user) {
-      dispatch(updateUser({ id: user.id, name, email }));
-      dispatch(toggleEditMode());
+      dispatch(updateUser({ name, email }));
     }
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  // Если пользователь не загружен, показываем загрузку
   if (!user) {
     return <CustomText size="l">Loading...</CustomText>;
   }
@@ -75,7 +55,10 @@ const ProfilePage = () => {
         </TouchableOpacity>
       </View>
 
-      <Image source={{ uri: user.avatar }} style={styles.avatar} />
+      <Image
+        source={{ uri: user.avatar || 'https://via.placeholder.com/200' }}
+        style={styles.avatar}
+      />
 
       {isEditing ? (
         <View style={styles.editContainer}>
@@ -88,15 +71,18 @@ const ProfilePage = () => {
             keyboardType="email-address"
           />
           <PrimaryButton color="green" onPress={handleSave} width="max">
-            Сохранить
+            {isLoading ? 'Сохранение...' : 'Сохранить'}
           </PrimaryButton>
         </View>
       ) : (
         <View style={styles.infoContainer}>
           <CustomText style={styles.name} size="l">
-            {user.name}
+            {user.username}
           </CustomText>
           <CustomText size="m">{user.email}</CustomText>
+          <PrimaryButton color="orange" onPress={handleLogout} width="max">
+            Выйти
+          </PrimaryButton>
         </View>
       )}
     </View>
