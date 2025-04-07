@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Product } from '@/shared/types/product';
@@ -7,11 +7,11 @@ import { EmptyFridgeMessage } from '@/entities/product/ui/empty-fridge-message';
 import { EditDeletePanel } from '@/shared/ui';
 import { colors } from '@/shared/styles/global';
 import EditProductModal from '@/features/edit-product';
-import { deleteProduct } from '@/entities/product/model/product-slice';
+import { deleteProduct, fetchProducts } from '@/entities/product/model/product-slice';
 import ConfirmDeleteModal from '@/features/delete-product';
 import { selectUser } from '@/entities/user/model/selectors';
 import { selectFilteredSortedSearchedProducts } from '../model/product-list-model';
-import { AppDispatch } from '@/app/store';
+import { AppDispatch, RootState } from '@/app/store';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -21,11 +21,19 @@ const productsPerRow = 3;
 export const ProductList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectUser);
-  const products = useSelector(selectFilteredSortedSearchedProducts);
+  const products = useSelector(selectFilteredSortedSearchedProducts) || [];
+  const loading = useSelector((state: RootState) => state.product.loading);
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isEditDeletePanelVisible, setEditDeletePanelVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (user?.id && !loading && products.length === 0) {
+      dispatch(fetchProducts(user.id));
+    }
+  }, [dispatch, user, loading, products.length]);
 
   const handleProductPress = (product: Product) => {
     setSelectedProduct(product);
@@ -45,13 +53,19 @@ export const ProductList = () => {
     setDeleteModalVisible(false);
   };
 
-  const handleConfirmDelete = () => {
-    if (selectedProduct && user) {
-      dispatch(deleteProduct(selectedProduct.id, user.id));
+  const handleConfirmDelete = async () => {
+    if (selectedProduct && user && selectedProduct.id) {
+      try {
+        await dispatch(deleteProduct({ productId: selectedProduct.id, userId: user.id })).unwrap();
+        await dispatch(fetchProducts(user.id)).unwrap();
+        console.log('Продукт успешно удалён из списка');
+      } catch (error) {
+        console.error('Ошибка при удалении продукта:', error);
+      }
+      setDeleteModalVisible(false);
+      setSelectedProduct(null);
+      setEditDeletePanelVisible(false);
     }
-    setDeleteModalVisible(false);
-    setSelectedProduct(null);
-    setEditDeletePanelVisible(false);
   };
 
   const handleCloseModal = () => {
@@ -59,9 +73,10 @@ export const ProductList = () => {
     setSelectedProduct(null);
   };
 
+  const safeProducts = Array.isArray(products) ? products : [];
   const rows: Product[][] = [];
-  for (let i = 0; i < products.length; i += productsPerRow) {
-    rows.push(products.slice(i, i + productsPerRow));
+  for (let i = 0; i < safeProducts.length; i += productsPerRow) {
+    rows.push(safeProducts.slice(i, i + productsPerRow));
   }
 
   const minShelves = Math.ceil(screenHeight / 2 / shelfHeight);
@@ -77,7 +92,7 @@ export const ProductList = () => {
       <View style={styles.row}>
         {item.row.map((product) => (
           <ProductCard
-            key={product.id}
+            key={product.id || `${product.name}-${Math.random()}`}
             product={product}
             onPress={() => handleProductPress(product)}
           />
@@ -90,7 +105,7 @@ export const ProductList = () => {
   return (
     <>
       <View style={styles.listContainer}>
-        {products.length === 0 && <EmptyFridgeMessage />}
+        {safeProducts.length === 0 && <EmptyFridgeMessage />}
         <FlatList
           data={shelves}
           renderItem={renderShelf}

@@ -1,14 +1,13 @@
 export interface Product {
-  id: string;
+  id?: string;
   name: string;
-  icon?: string | null;
   category: string;
   quantity: number;
-  unit: string;
   minQuantity: number;
+  quantityUnit: string;
   manufactureDate: string;
   expirationDate: string;
-  storageDuration: string;
 }
 
-export const units: string[] = ['кг', 'шт', 'л', 'уп'];
+export const units = ['шт', 'кг', 'г', 'литр', 'мл'] as const;
+export type Unit = (typeof units)[number];

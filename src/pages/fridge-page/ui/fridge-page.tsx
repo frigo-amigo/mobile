@@ -11,7 +11,7 @@ import { SortPanel } from '@/features/sort-product/ui/sort-panel';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/app/store';
 import { selectUser } from '@/entities/user/model/selectors';
-import { loadProducts } from '@/entities/product/model/product-slice';
+import { fetchProducts } from '@/entities/product/model/product-slice';
 
 const { width } = Dimensions.get('window');
 
@@ -25,7 +25,7 @@ const FridgePage = () => {
 
   useEffect(() => {
     if (user) {
-      dispatch(loadProducts(user.id));
+      dispatch(fetchProducts(user.id));
     }
   }, [dispatch, user]);
 

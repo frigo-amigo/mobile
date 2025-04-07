@@ -158,7 +158,6 @@ export const updateProduct = async (product: Product & { userId: string }): Prom
           product.minQuantity,
           product.manufactureDate,
           product.expirationDate,
-          product.storageDuration,
           product.id,
           product.userId,
         ],
@@ -187,7 +186,6 @@ export const copyDatabaseToDocuments = async () => {
     const dbPath = `${FileSystem.documentDirectory}SQLite/myApp.db`; // Путь к базе в песочнице
     const destPath = `${FileSystem.documentDirectory}myApp.db`; // Путь для копии
     await FileSystem.copyAsync({ from: dbPath, to: destPath });
-    console.log('Database copied to:', destPath);
     // Дополнительно: делимся файлом для извлечения
     await Sharing.shareAsync(destPath);
     return destPath;

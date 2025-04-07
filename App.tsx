@@ -11,9 +11,17 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { MainStack } from '@/app/providers/navigation/main-stack';
 import { AuthStack } from '@/app/providers/navigation/auth-stack';
-import { selectIsAuthenticated, selectAuthStatus } from '@/entities/user/model/selectors';
+import {
+  selectIsAuthenticated,
+  selectAuthStatus,
+  selectUser,
+} from '@/entities/user/model/selectors';
 import { checkAuth } from '@/entities/user/model/auth-slice';
 import { RootState } from '@/app/store';
+import { fetchUser, setUser } from '@/entities/user/model/user-slice';
+import { fetchProducts } from '@/entities/product/model/product-slice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchUserInfoApi } from '@/entities/user/model/auth-service';
 
 const AppContent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,11 +30,14 @@ const AppContent = () => {
   const [loaded, error] = useFonts({
     'Jost-Regular': require('@/shared/assets/fonts/Jost-Regular.ttf'),
   });
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     const prepare = async () => {
-      await SplashScreen.preventAutoHideAsync();
-      await dispatch(checkAuth()).unwrap();
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        const result = await dispatch(checkAuth()).unwrap();
+      } catch (err) {}
     };
     prepare();
   }, [dispatch]);
@@ -72,3 +83,6 @@ const styles = StyleSheet.create({
 });
 
 export default AppEntryPoint;
+function setToken(token: string): any {
+  throw new Error('Function not implemented.');
+}

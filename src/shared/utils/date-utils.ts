@@ -1,47 +1,59 @@
 export const calculateStorageDuration = (
   manufactureDate: string,
   expirationDate: string,
-  currentDate: string = new Date().toLocaleDateString('ru-RU'),
 ): number => {
-  try {
-    const productionTimestamp = new Date(manufactureDate.split('.').reverse().join('-')).getTime();
-    const expirationTimestamp = new Date(expirationDate.split('.').reverse().join('-')).getTime();
-    const currentTimestamp = new Date(currentDate.split('.').reverse().join('-')).getTime();
-
-    if (isNaN(productionTimestamp) || isNaN(expirationTimestamp) || isNaN(currentTimestamp)) {
-      console.error('Неверный формат даты:', { manufactureDate, expirationDate, currentDate });
-      return 0;
-    }
-
-    const shelfLifeDuration = expirationTimestamp - productionTimestamp;
-
-    const remainingShelfLife = expirationTimestamp - currentTimestamp;
-    const remainingDays = Math.ceil(remainingShelfLife / (1000 * 60 * 60 * 24));
-
-    const shelfLifePercentage = (remainingShelfLife / shelfLifeDuration) * 100;
-
-    return remainingDays;
-  } catch (error) {
-    console.error('Ошибка в calculateShelfLifePercentage:', error);
+  if (
+    !manufactureDate ||
+    !expirationDate ||
+    manufactureDate.length !== 10 ||
+    expirationDate.length !== 10
+  ) {
     return 0;
   }
+
+  const manufDate = new Date(formatDateForServer(manufactureDate));
+  const expDate = new Date(formatDateForServer(expirationDate));
+
+  if (isNaN(manufDate.getTime()) || isNaN(expDate.getTime()) || expDate <= manufDate) {
+    return 0;
+  }
+
+  const durationMs = expDate.getTime() - manufDate.getTime();
+  const days = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
+  return days;
 };
 
-export function calculateRemainingPercentage(
+export const formatDateForServer = (date: string): string => {
+  if (!date || date.length !== 10) return new Date().toISOString();
+  const [day, month, year] = date.split('.');
+  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T00:00:00.000Z`;
+};
+
+export const calculateRemainingPercentage = (
   manufactureDate: string,
   expirationDate: string,
-  currentDate: string = new Date().toLocaleDateString('ru-RU'),
-): number {
-  const manufacture = new Date(manufactureDate.split('.').reverse().join('-')).getTime();
-  const expiration = new Date(expirationDate.split('.').reverse().join('-')).getTime();
-  const now = new Date(currentDate.split('.').reverse().join('-')).getTime();
+  currentDate: string = new Date().toISOString(),
+): number => {
+  const manufDate = new Date(manufactureDate);
+  const expDate = new Date(expirationDate);
+  const now = new Date(currentDate);
 
-  if (expiration <= manufacture || now >= expiration) return 0;
-  const totalLifeSpan = expiration - manufacture;
-  const remainingLifeSpan = expiration - now;
+  if (
+    isNaN(manufDate.getTime()) ||
+    isNaN(expDate.getTime()) ||
+    isNaN(now.getTime()) ||
+    expDate <= manufDate ||
+    now >= expDate
+  ) {
+    return 0;
+  }
 
-  return (remainingLifeSpan / totalLifeSpan) * 100;
-}
+  const totalLifeSpan = expDate.getTime() - manufDate.getTime();
+  const remainingLifeSpan = expDate.getTime() - now.getTime();
+  const percentage = (remainingLifeSpan / totalLifeSpan) * 100;
+
+  return percentage;
+};
 
 export const isValidDate = (date: string): boolean => {
   const dateParts = date.split('.');
@@ -66,16 +78,20 @@ export const isValidDate = (date: string): boolean => {
 
 export const formatDateInput = (text: string): string => {
   const sanitized = text.replace(/[^0-9]/g, '');
+  if (sanitized.length === 0) return '';
 
-  const formatted =
-    sanitized.length <= 2
-      ? sanitized
-      : sanitized.length <= 4
-      ? `${sanitized.slice(0, 2)}.${sanitized.slice(2)}`
-      : `${sanitized.slice(0, 2)}.${sanitized.slice(2, 4)}.${sanitized.slice(4, 8)}`;
+  let formatted = sanitized;
+  if (sanitized.length > 2) {
+    formatted = `${sanitized.slice(0, 2)}.${sanitized.slice(2)}`;
+  }
+  if (sanitized.length > 4) {
+    formatted = `${sanitized.slice(0, 2)}.${sanitized.slice(2, 4)}.${sanitized.slice(4, 8)}`;
+  }
+
+  if (formatted.length > 10) return formatted.slice(0, 10);
 
   if (formatted.length === 10 && !isValidDate(formatted)) {
-    return '';
+    return formatted.slice(0, formatted.lastIndexOf('.'));
   }
 
   return formatted;
@@ -99,4 +115,17 @@ export const formatDate = (dateString: string): number => {
   }
 
   return parsedDate.getTime();
+};
+
+export const calculateRemainingDays = (expirationDate: string): number => {
+  const expDate = new Date(expirationDate);
+  const now = new Date();
+
+  if (isNaN(expDate.getTime()) || expDate <= now) {
+    return 0;
+  }
+
+  const remainingMs = expDate.getTime() - now.getTime();
+  const remainingDays = Math.ceil(remainingMs / (1000 * 60 * 60 * 24));
+  return remainingDays;
 };

@@ -3,7 +3,11 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-nati
 import { Product } from '@/shared/types/product';
 import { CustomText, Icon } from '@/shared/ui';
 import { getIcon } from '@/shared/utils/product-utils';
-import { calculateRemainingPercentage, calculateStorageDuration } from '@/shared/utils/date-utils';
+import {
+  calculateRemainingDays,
+  calculateRemainingPercentage,
+  calculateStorageDuration,
+} from '@/shared/utils/date-utils';
 
 const { width } = Dimensions.get('window');
 const cardWidth = (width - 80) / 3;
@@ -14,7 +18,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress }) => {
-  const lifeSpanInDays = calculateStorageDuration(product.manufactureDate, product.expirationDate);
+  const lifeSpanInDays = calculateRemainingDays(product.expirationDate); // Считаем оставшиеся дни
   const remainingPercentage = calculateRemainingPercentage(
     product.manufactureDate,
     product.expirationDate,
@@ -28,7 +32,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onPress }) =>
         <View>
           <Icon name="quantity-circle" width={cardWidth / 4} height={cardWidth / 4} />
           <CustomText size="xs" weight="regular" color="grey90" style={styles.quantityText}>
-            {product.quantity} {product.unit}
+            {product.quantity} {product.quantityUnit}
           </CustomText>
         </View>
         <View style={styles.date}>

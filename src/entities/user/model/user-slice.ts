@@ -34,10 +34,9 @@ export const fetchUser = createAsyncThunk(
   },
 );
 
-// Асинхронное действие для обновления пользователя
 export const updateUser = createAsyncThunk(
   'user/updateUser',
-  async (credentials: { name: string; email: string }, { getState, rejectWithValue }) => {
+  async (credentials: { name: string; email: string }, { getState, dispatch, rejectWithValue }) => {
     try {
       const state = getState() as RootState;
       const token = state.auth.token;
@@ -45,6 +44,7 @@ export const updateUser = createAsyncThunk(
         throw new Error('No token found');
       }
       const updatedUser = await updateUserApi(token, credentials);
+      dispatch({ type: 'auth/setUser', payload: updatedUser });
       return updatedUser;
     } catch (err: any) {
       return rejectWithValue(err.message || 'Ошибка обновления профиля');
@@ -61,6 +61,12 @@ const userSlice = createSlice({
     },
     setUser(state, action: PayloadAction<User>) {
       state.user = action.payload;
+    },
+    clearUser(state) {
+      state.user = null;
+      state.isEditing = false;
+      state.isLoading = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -93,5 +99,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { toggleEditMode, setUser } = userSlice.actions;
+export const { toggleEditMode, setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;

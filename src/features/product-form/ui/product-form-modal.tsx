@@ -11,11 +11,15 @@ import {
 } from 'react-native';
 import { CustomText, Icon, IconButton, PrimaryButton, Select, Input } from '@/shared/ui';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProduct, editProduct } from '@/entities/product/model/product-slice';
+import { addProduct, editProduct, fetchProducts } from '@/entities/product/model/product-slice';
 import { Product, units } from '@/shared/types/product';
 import { categories } from '@/shared/data/categories';
 import { colors } from '@/shared/styles/global';
-import { calculateStorageDuration, formatDateInput } from '@/shared/utils/date-utils';
+import {
+  calculateStorageDuration,
+  formatDateForServer,
+  formatDateInput,
+} from '@/shared/utils/date-utils';
 import { getIcon } from '@/shared/utils/product-utils';
 import { AppDispatch } from '@/app/store';
 import { selectUser } from '@/entities/user/model/selectors';
@@ -41,11 +45,16 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   const [name, setName] = useState(product?.name || '');
   const [category, setCategory] = useState(product?.category || '');
   const [quantity, setQuantity] = useState(product?.quantity || 1);
-  const [unit, setUnit] = useState(product?.unit || 'шт');
+  const [quantityUnit, setQuantityUnit] = useState(product?.quantityUnit || 'шт');
   const [minQuantity, setMinQuantity] = useState(product?.minQuantity || 1);
-  const [manufactureDate, setManufactureDate] = useState(product?.manufactureDate || '');
-  const [expirationDate, setExpirationDate] = useState(product?.expirationDate || '');
-  const [storageDuration, setStorageDuration] = useState(product?.storageDuration || '');
+  const [manufactureDate, setManufactureDate] = useState(
+    product?.manufactureDate ? new Date(product.manufactureDate).toLocaleDateString('ru-RU') : '',
+  );
+  const [expirationDate, setExpirationDate] = useState(
+    product?.expirationDate ? new Date(product.expirationDate).toLocaleDateString('ru-RU') : '',
+  );
+  const [storageDuration, setStorageDuration] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const iconName = getIcon(name, category);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -62,39 +71,56 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
     }
   }, [isVisible]);
 
-  const generateId = () => `${Date.now()}`;
+  const handleSubmit = async () => {
+    console.log('handleSubmit вызван');
+    if (!name.trim() || !user) {
+      console.log('Условие не выполнено: name или user отсутствуют', { name, user });
+      return;
+    }
 
-  const handleSubmit = () => {
-    if (!name.trim() || !user) return;
-
-    const productData: Product = {
-      id: isEditing ? product!.id : generateId(),
+    const productData: Product & { updatedFields?: string[] } = {
+      id: product?.id,
       name,
       category,
       quantity,
-      unit,
       minQuantity,
-      manufactureDate,
-      expirationDate,
-      storageDuration,
+      quantityUnit,
+      manufactureDate: formatDateForServer(manufactureDate),
+      expirationDate: formatDateForServer(expirationDate),
     };
 
-    if (isEditing) {
-      dispatch(editProduct(productData, user.id));
-    } else {
-      dispatch(addProduct(productData, user.id));
-    }
+    console.log('productData перед отправкой:', productData);
 
-    onClose();
-    if (!isEditing) {
+    try {
+      if (isEditing && productData.id) {
+        const updatedFields = Object.keys(productData).filter(
+          (key) => productData[key as keyof Product] !== product![key as keyof Product],
+        );
+        const payload = { ...productData, updatedFields };
+        console.log('Отправляем editProduct с payload:', payload);
+        const result = await dispatch(editProduct({ product: payload, userId: user.id })).unwrap();
+        console.log('editProduct результат:', result);
+        console.log('Продукт успешно обновлён');
+      } else {
+        console.log('Отправляем addProduct с productData:', productData);
+        const result = await dispatch(
+          addProduct({ product: productData, userId: user.id }),
+        ).unwrap();
+        console.log('addProduct результат:', result);
+        console.log('Продукт успешно добавлен');
+      }
+      const updatedProducts = await dispatch(fetchProducts(user.id)).unwrap();
+      console.log('Продукты успешно обновлены:', updatedProducts);
+      onClose();
       setName('');
       setCategory('');
       setQuantity(1);
       setMinQuantity(1);
-      setUnit('шт');
+      setQuantityUnit('шт');
       setManufactureDate('');
       setExpirationDate('');
-      setStorageDuration('');
+    } catch (error) {
+      console.error('Ошибка в handleSubmit:', error);
     }
   };
 
@@ -157,7 +183,11 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
                   style={{ maxWidth: 70, textAlign: 'center' }}
                 />
                 <IconButton src="plus" onPress={() => setQuantity(quantity + 1)} />
-                <Select options={units} defaultOption={unit} onSelect={setUnit} />
+                <Select
+                  options={units as unknown as string[]}
+                  defaultOption={quantityUnit}
+                  onSelect={setQuantityUnit}
+                />
               </View>
               <Input
                 value={String(minQuantity)}

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import productReducer, { loadProducts, setProducts } from '@/entities/product/model/product-slice';
+import productReducer, { fetchProducts, setProducts } from '@/entities/product/model/product-slice';
 import filterReducer from '@/features/filter-product/model/filter-slice';
 import sortReducer from '@/features/sort-product/model/sort-slice';
 import searchReducer from '@/features/search-product/model/search-slice';
@@ -23,7 +23,7 @@ export const store = configureStore({
 //     await initDatabase();
 //     const user = await store.dispatch(initUser()); // Получаем результат напрямую
 //     if (user) {
-//       await store.dispatch(loadProducts(user.id));
+//       await store.dispatch(fetchProducts(user.id));
 //       await copyDatabaseToDocuments(); // Копируем базу при запуске
 //     }
 //   } catch (error) {
