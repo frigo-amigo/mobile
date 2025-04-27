@@ -6,6 +6,6 @@ export const API_ENDPOINTS = {
   USER_INFO: '/api/users/info',
   PRODUCTS_FETCH: '/api/products/many',
   PRODUCTS_ADD: '/api/products',
-  PRODUCTS_UPDATE: '/api/products/update',
+  PRODUCTS_UPDATE: '/api/products',
   PRODUCTS_DELETE: '/api/products/delete',
 } as const;

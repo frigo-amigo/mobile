@@ -72,13 +72,12 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
   }, [isVisible]);
 
   const handleSubmit = async () => {
-    console.log('handleSubmit вызван');
     if (!name.trim() || !user) {
-      console.log('Условие не выполнено: name или user отсутствуют', { name, user });
+      setError('Название продукта и пользователь обязательны');
       return;
     }
 
-    const productData: Product & { updatedFields?: string[] } = {
+    const productData: Product = {
       id: product?.id,
       name,
       category,
@@ -89,39 +88,41 @@ export const ProductFormModal: React.FC<ProductFormModalProps> = ({
       expirationDate: formatDateForServer(expirationDate),
     };
 
-    console.log('productData перед отправкой:', productData);
-
     try {
       if (isEditing && productData.id) {
-        const updatedFields = Object.keys(productData).filter(
-          (key) => productData[key as keyof Product] !== product![key as keyof Product],
-        );
-        const payload = { ...productData, updatedFields };
-        console.log('Отправляем editProduct с payload:', payload);
-        const result = await dispatch(editProduct({ product: payload, userId: user.id })).unwrap();
-        console.log('editProduct результат:', result);
-        console.log('Продукт успешно обновлён');
+        const result = await dispatch(
+          editProduct({ product: productData, userId: user.id }),
+        ).unwrap();
       } else {
-        console.log('Отправляем addProduct с productData:', productData);
         const result = await dispatch(
           addProduct({ product: productData, userId: user.id }),
         ).unwrap();
-        console.log('addProduct результат:', result);
-        console.log('Продукт успешно добавлен');
       }
-      const updatedProducts = await dispatch(fetchProducts(user.id)).unwrap();
-      console.log('Продукты успешно обновлены:', updatedProducts);
+      await dispatch(fetchProducts(user.id)).unwrap();
       onClose();
-      setName('');
-      setCategory('');
-      setQuantity(1);
-      setMinQuantity(1);
-      setQuantityUnit('шт');
-      setManufactureDate('');
-      setExpirationDate('');
-    } catch (error) {
-      console.error('Ошибка в handleSubmit:', error);
+      resetForm();
+    } catch (error: any) {
+      console.error('Ошибка в handleSubmit:', {
+        message: error.message,
+        data: error.response?.data,
+      });
+      setError(
+        `Не удалось сохранить продукт: ${
+          error.response?.data?.message || error.message || 'Ошибка сервера'
+        }`,
+      );
     }
+  };
+
+  const resetForm = () => {
+    setName('');
+    setCategory('');
+    setQuantity(1);
+    setMinQuantity(1);
+    setQuantityUnit('шт');
+    setManufactureDate('');
+    setExpirationDate('');
+    setError(null);
   };
 
   return (

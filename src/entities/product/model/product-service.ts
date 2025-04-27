@@ -32,23 +32,40 @@ export const addProductApi = async (product: Product, token: string): Promise<Pr
   }
 };
 
-export const updateProductApi = async (
-  product: Product & { updatedFields?: string[] },
-  token: string,
-): Promise<Product> => {
-  const response = await apiClient.put(API_ENDPOINTS.PRODUCTS_UPDATE, product, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+export const updateProductApi = async (product: Product, token: string): Promise<Product> => {
+  try {
+    const { id, ...updateData } = product;
+    const response = await apiClient.put(`/api/products/${id}`, updateData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('updateProductApi: Ошибка:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+    throw error;
+  }
 };
 
 export const deleteProductApi = async (productId: string, token: string): Promise<void> => {
-  await apiClient.delete(API_ENDPOINTS.PRODUCTS_DELETE, {
-    params: { id: productId },
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  try {
+    const response = await apiClient.delete(`/api/products/delete`, {
+      params: { id: productId },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error: any) {
+    console.error('deleteProductApi: Ошибка:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+      url: error.config?.url,
+    });
+    throw error;
+  }
 };

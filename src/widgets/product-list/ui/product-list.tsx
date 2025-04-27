@@ -24,6 +24,7 @@ export const ProductList = () => {
   const products = useSelector(selectFilteredSortedSearchedProducts) || [];
   const loading = useSelector((state: RootState) => state.product.loading);
 
+  const [error, setError] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isEditDeletePanelVisible, setEditDeletePanelVisible] = useState(false);
   const [isEditModalVisible, setEditModalVisible] = useState(false);
@@ -57,10 +58,19 @@ export const ProductList = () => {
     if (selectedProduct && user && selectedProduct.id) {
       try {
         await dispatch(deleteProduct({ productId: selectedProduct.id, userId: user.id })).unwrap();
-        await dispatch(fetchProducts(user.id)).unwrap();
-        console.log('Продукт успешно удалён из списка');
-      } catch (error) {
-        console.error('Ошибка при удалении продукта:', error);
+        const fetchResult = await dispatch(fetchProducts(user.id)).unwrap();
+        setError(null);
+      } catch (error: any) {
+        const errorMessage =
+          error?.message ||
+          error?.data?.message ||
+          'Не удалось удалить продукт: ошибка сервера';
+        console.error('Ошибка при удалении продукта:', {
+          message: errorMessage,
+          data: error?.data,
+          error,
+        });
+        setError(errorMessage);
       }
       setDeleteModalVisible(false);
       setSelectedProduct(null);

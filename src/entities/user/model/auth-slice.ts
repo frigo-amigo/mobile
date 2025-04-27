@@ -62,7 +62,6 @@ export const checkAuth = createAsyncThunk(
   async (_, { dispatch, rejectWithValue }) => {
     try {
       const token = await AsyncStorage.getItem('token');
-      console.log('checkAuth: Токен из AsyncStorage:', token);
       if (!token) {
         return rejectWithValue('No token found');
       }

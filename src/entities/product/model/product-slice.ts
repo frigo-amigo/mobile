@@ -65,7 +65,7 @@ export const addProduct = createAsyncThunk(
 export const editProduct = createAsyncThunk(
   'product/editProduct',
   async (
-    { product, userId }: { product: Product & { updatedFields?: string[] }; userId: string },
+    { product, userId }: { product: Product; userId: string },
     { getState, rejectWithValue },
   ) => {
     try {
@@ -74,11 +74,13 @@ export const editProduct = createAsyncThunk(
       if (!token) throw new Error('Токен не найден');
       if (!product.id) throw new Error('ID продукта обязателен для обновления');
       const updatedProduct = await updateProductApi(product, token);
-      console.log('editProduct: Обновлённый продукт:', updatedProduct);
       return updatedProduct;
     } catch (err: any) {
-      console.error('Ошибка в editProduct:', err);
-      return rejectWithValue(err.message || 'Ошибка обновления продукта');
+      console.error('Ошибка в editProduct:', {
+        message: err.message,
+        data: err.response?.data,
+      });
+      return rejectWithValue(err.response?.data || err.message || 'Ошибка обновления продукта');
     }
   },
 );
@@ -95,11 +97,13 @@ export const deleteProduct = createAsyncThunk(
       const token = state.auth.token;
       if (!token) throw new Error('Токен не найден');
       await deleteProductApi(productId, token);
-      console.log('deleteProduct: Продукт удалён:', productId);
       return { productId };
     } catch (err: any) {
-      console.error('Ошибка в deleteProduct:', err.response?.data || err.message);
-      return rejectWithValue(err.message || 'Ошибка удаления продукта');
+      console.error('Ошибка в deleteProduct:', {
+        message: err.message,
+        data: err.response?.data,
+      });
+      return rejectWithValue(err.response?.data || err.message || 'Ошибка удаления продукта');
     }
   },
 );
