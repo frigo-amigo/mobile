@@ -58,7 +58,8 @@
     "storybook:ios": "cross-env STORYBOOK_ENABLED='true' expo start --ios",
     "storybook:android": "cross-env STORYBOOK_ENABLED='true' expo start --android",
     "storybook:web": "cross-env STORYBOOK_ENABLED='true' expo start --web",
-    "storybook-build": "cross-env STORYBOOK_ENABLED='true' expo export"
+    "storybook-build": "cross-env STORYBOOK_ENABLED='true' expo export",
+    "generate-icons": "node scripts/generate-icon-mapping.js"
   },
   "version": "1.0.0",
   "private": true,

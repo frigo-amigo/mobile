@@ -105,7 +105,7 @@ export const BottomTabNavigator = () => {
         />
       </Tab.Navigator>
       <Image
-        source={require('@/shared/assets/images/common/tabbar-circle.png')}
+        source={require('@/shared/assets/icons/common/tabbar-circle.png')}
         style={styles.circle}
       />
       <ProductFormModal isVisible={isModalVisible} onClose={closeModal} />

@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
-import { iconsMap } from '@/shared/assets/images/icons-map';
-import { SvgProps } from 'react-native-svg';
+import { iconDefinitions } from '@/shared/assets/icons/icon-mapping';
 
 type IconProps = {
-  name: string | null;
+  name: string;
   width?: number;
   height?: number;
   color?: string;
@@ -20,12 +19,13 @@ const Icon: React.FC<IconProps> = ({
   strokeWidth = 1,
   style,
 }) => {
-  if (!name || !iconsMap[name]) {
-    console.warn(`Icon "${name}" не найден. Проверьте iconsMap.`);
+  const icon = iconDefinitions[name];
+  if (!icon) {
+    console.warn(`Icon "${name}" not found.`);
     return null;
   }
 
-  const SvgIcon = iconsMap[name] as React.FC<SvgProps>;
+  const SvgIcon = icon.component;
 
   return (
     <View style={[styles.base, { width, height }, style]}>

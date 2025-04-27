@@ -27,7 +27,7 @@ const WelcomePage: React.FC = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../../shared/assets/images/common/welcome-image.png')}
+        source={require('../../../shared/assets/icons/common/welcome-image.png')}
         style={styles.image}
         resizeMode="cover"
       />
