@@ -62,9 +62,7 @@ export const ProductList = () => {
         setError(null);
       } catch (error: any) {
         const errorMessage =
-          error?.message ||
-          error?.data?.message ||
-          'Не удалось удалить продукт: ошибка сервера';
+          error?.message || error?.data?.message || 'Не удалось удалить продукт: ошибка сервера';
         console.error('Ошибка при удалении продукта:', {
           message: errorMessage,
           data: error?.data,
@@ -152,7 +150,7 @@ const styles = StyleSheet.create({
   shelfContainer: {
     height: shelfHeight,
     justifyContent: 'flex-end',
-    marginBottom: 28,
+    marginBottom: 30,
   },
   row: {
     flexDirection: 'row',

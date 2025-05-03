@@ -26,43 +26,17 @@ const CustomText: React.FC<CustomTextProps> = ({
 export default CustomText;
 
 const styles = StyleSheet.create({
-  base: {
-    fontFamily: 'Jost-Regular',
-  },
-  xs: {
-    fontSize: 12,
-  },
-  s: {
-    fontSize: 14,
-  },
-  m: {
-    fontSize: 16,
-  },
-  l: {
-    fontSize: 20,
-  },
-  xl: {
-    fontSize: 32,
-  },
-  regular: {
-    fontWeight: '400',
-  },
-  medium: {
-    fontWeight: '500',
-  },
-  grey90: {
-    color: colors.gray90,
-  },
-  grey50: {
-    color: colors.gray50,
-  },
-  green: {
-    color: colors.green,
-  },
-  red50: {
-    color: colors.red50,
-  },
-  white: {
-    color: colors.white,
-  },
+  base: { fontFamily: 'Jost-Regular' },
+  xs: { fontSize: 12 },
+  s: { fontSize: 14 },
+  m: { fontSize: 16 },
+  l: { fontSize: 20 },
+  xl: { fontSize: 32 },
+  regular: { fontWeight: '400' },
+  medium: { fontWeight: '500' },
+  grey90: { color: colors.gray90 },
+  grey50: { color: colors.gray50 },
+  green: { color: colors.green },
+  red50: { color: colors.red50 },
+  white: { color: colors.white },
 });

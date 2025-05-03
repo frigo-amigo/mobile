@@ -53,8 +53,12 @@ import FruitsAndBerries from './product-icons/fruits-and-berries.svg';
 import Garlic from './product-icons/garlic.svg';
 import Grape from './product-icons/grape.svg';
 import HotPepper from './product-icons/hot-pepper.svg';
+import Kiwi from './product-icons/kiwi.svg';
+import Lemon from './product-icons/lemon.svg';
+import Mandarin from './product-icons/mandarin.svg';
 import Mango from './product-icons/mango.svg';
 import MeatAndSausages from './product-icons/meat-and-sausages.svg';
+import Melon from './product-icons/melon.svg';
 import Nuts from './product-icons/nuts.svg';
 import Onion from './product-icons/onion.svg';
 import Orange from './product-icons/orange.svg';
@@ -63,6 +67,7 @@ import Pear from './product-icons/pear.svg';
 import PecinCabbage from './product-icons/pecin-cabbage.svg';
 import Pelmeni from './product-icons/pelmeni.svg';
 import Pepper from './product-icons/pepper.svg';
+import Persimmon from './product-icons/persimmon.svg';
 import Plum from './product-icons/plum.svg';
 import Potato from './product-icons/potato.svg';
 import ProcessedFood from './product-icons/processed-food.svg';
@@ -71,10 +76,12 @@ import Radish from './product-icons/radish.svg';
 import RedOnion from './product-icons/red-onion.svg';
 import Sauces from './product-icons/sauces.svg';
 import Spices from './product-icons/spices.svg';
+import Strawberry from './product-icons/strawberry.svg';
 import Tomato from './product-icons/tomato.svg';
 import Turnip from './product-icons/turnip.svg';
 import Undefined from './product-icons/undefined.svg';
 import Vegetables from './product-icons/vegetables.svg';
+import Watermelon from './product-icons/watermelon.svg';
 import Zucchini from './product-icons/zucchini.svg';
 
 type IconComponent = React.FC<SvgProps>;
@@ -137,8 +144,12 @@ export const iconDefinitions: Record<string, IconDefinition> = {
   'garlic': { component: Garlic, type: 'product' },
   'grape': { component: Grape, type: 'product' },
   'hot-pepper': { component: HotPepper, type: 'product' },
+  'kiwi': { component: Kiwi, type: 'product' },
+  'lemon': { component: Lemon, type: 'product' },
+  'mandarin': { component: Mandarin, type: 'product' },
   'mango': { component: Mango, type: 'product' },
   'meat-and-sausages': { component: MeatAndSausages, type: 'category' },
+  'melon': { component: Melon, type: 'product' },
   'nuts': { component: Nuts, type: 'product' },
   'onion': { component: Onion, type: 'product' },
   'orange': { component: Orange, type: 'product' },
@@ -147,6 +158,7 @@ export const iconDefinitions: Record<string, IconDefinition> = {
   'pecin-cabbage': { component: PecinCabbage, type: 'product' },
   'pelmeni': { component: Pelmeni, type: 'product' },
   'pepper': { component: Pepper, type: 'product' },
+  'persimmon': { component: Persimmon, type: 'product' },
   'plum': { component: Plum, type: 'product' },
   'potato': { component: Potato, type: 'product' },
   'processed-food': { component: ProcessedFood, type: 'product' },
@@ -155,10 +167,12 @@ export const iconDefinitions: Record<string, IconDefinition> = {
   'red-onion': { component: RedOnion, type: 'product' },
   'sauces': { component: Sauces, type: 'product' },
   'spices': { component: Spices, type: 'product' },
+  'strawberry': { component: Strawberry, type: 'product' },
   'tomato': { component: Tomato, type: 'product' },
   'turnip': { component: Turnip, type: 'product' },
   'undefined': { component: Undefined, type: 'product' },
   'vegetables': { component: Vegetables, type: 'product' },
+  'watermelon': { component: Watermelon, type: 'product' },
   'zucchini': { component: Zucchini, type: 'product' },
 };
 
@@ -175,9 +189,17 @@ export const productNameMapping: Record<string, string> = {
   персик: 'peach',
   груша: 'pear',
   слива: 'plum',
+  киви: 'kiwi',
+  лимон: 'lemon',
+  мандарин: 'mandarin',
+  дыня: 'melon',
+  хурма: 'persimmon', 
+  клубника: 'strawberry',
+  арбуз: 'watermelon',
 
   // vegetables
   кабачок: 'zucchini',
+  кабачки: 'zucchini',
   капуста: 'cabbage',
   морковь: 'carrot',
   'цветная капуста': 'cauliflower',
@@ -188,7 +210,7 @@ export const productNameMapping: Record<string, string> = {
   чеснок: 'garlic',
   'острый перец': 'hot-pepper',
   лук: 'onion',
-  'пекинская капуста': 'pekin-cabbage',
+  'пекинская капуста': 'pecin-cabbage',
   перец: 'pepper',
   картошка: 'potato',
   тыква: 'pumpkin',
@@ -196,6 +218,8 @@ export const productNameMapping: Record<string, string> = {
   'красный лук': 'red-onion',
   репа: 'turnip',
   свекла: 'beet',
+
+  // 
   пельмени: 'pelmeni'
 };
 

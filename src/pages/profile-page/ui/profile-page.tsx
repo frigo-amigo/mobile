@@ -53,7 +53,11 @@ const ProfilePage = () => {
       </View>
 
       <Image
-        source={{ uri: user.avatar || 'https://via.placeholder.com/200' }}
+        source={{
+          uri:
+            user.avatar ||
+            'https://yt3.googleusercontent.com/ytc/AIdro_kdhVjfCTu1e5LC2h3zk0VCuRvw8QkV4c6zq1AZUkKJnQ=s900-c-k-c0x00ffffff-no-rj',
+        }}
         style={styles.avatar}
       />
 
